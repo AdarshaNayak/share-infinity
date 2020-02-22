@@ -1,0 +1,38 @@
+<div class="form-class" style="width: 30%;">
+	<form class="form-signin" ng-submit="$ctrl.login()">
+		<div ng-show="$ctrl.error" class="alert alert-danger">
+			{{ $ctrl.message }}
+		</div>
+		<div ng-show="$ctrl.success" class="alert alert-success">
+			{{ $ctrl.message }}
+		</div>
+		<b><h1 style="font-weight: bold">Share Infinity</h1></b>
+		<h3 class="h3 mb-3 font-weight-normal">Please Log in</h3>
+		<input
+			type="text"
+			id="username"
+			class="form-control"
+			placeholder="Username"
+			required
+			autofocus
+			ng-model="$ctrl.username"
+		/>
+
+		<input
+			type="password"
+			id="inputPassword"
+			class="form-control"
+			placeholder="Password"
+			required
+			ng-model="$ctrl.password"
+		/>
+		<button class="btn btn-lg btn-primary btn-block" type="submit">
+			Log in
+		</button>
+		<br />
+		<p>
+			Don't have an account ?
+			<a href="signup">Sign Up! </a>
+		</p>
+	</form>
+</div>
