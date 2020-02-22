@@ -4,8 +4,8 @@
 
 ## Everyone install node v10.19.0
 
-## cd src/app/ui
+### cd src/app/ui
 
-## npm install
+### npm install
 
-## npx parcel index.html
+### npx parcel index.html
