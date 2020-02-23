@@ -1,0 +1,4 @@
+{
+	"connectionString": "mongodb://localhost/shareInfinity",
+	"secret": "share-infinity-password"
+}
