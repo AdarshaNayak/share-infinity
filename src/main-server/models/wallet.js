@@ -3,10 +3,8 @@ var Schema =  mongoose.Schema;
 
 var walletSchema = new Schema({
     userId:{
-        // type: mongoose.Schema.Types.ObjectId,
-        // ref:'User'
-        type:String,
-        required:true
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'User'
     },
     balance:{
         type:Number
