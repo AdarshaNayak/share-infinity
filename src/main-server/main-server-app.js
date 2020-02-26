@@ -1,36 +1,72 @@
 // nodejs server running on aws
-var express =  require('express');
-var app =  express();
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var User = require('./models/user');
-var wallet = require('./models/wallet');
-var rating = require('./models/rating');
-var completedTask = require('./models/completedTask');
-var task = require('./models/task');
-var systemInfo = require('./models/systemInfo');
-var PlatformProfit =  require('./models/platformProfit');
 
-var ip = 'localhost';
+// var wallet = require('./models/wallet');
+// var rating = require('./models/rating');
+// var completedTask = require('./models/completedTask');
+// var task = require('./models/task');
+// var systemInfo = require('./models/systemInfo');
+// var PlatformProfit =  require('./models/platformProfit');
 
-var db =  `mongodb://${ip}/shareInfinity`;
+const express = require("express");
+const app = express();
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const jwt = require("./_helpers/jwt");
+const errorHandler = require("./_helpers/error-handler");
 
-mongoose.connect(db,{ useNewUrlParser: true , useUnifiedTopology: true})
-    .then(() => {
-        console.log("Database connection successfull");
-    })
-    .catch(() => {
-        console.log("Database connection error");
-    });
+//Importing services
+const userService = require("./services/user.service");
 
-var conn = mongoose.connection;
-conn.on('error', console.error.bind(console, 'MongoDB connection error:'));
-var port = 8080;
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cors());
 
-app.listen(port,function () {
-    console.log("app listening on port "+port);
-})
+// use JWT auth to secure the api (disabled temporarily so that we need not send bearer token everytime )
+//app.use(jwt());
 
+//API routes
 
+app.post("/api/v1/users/register", (req, res, next) => {
+	userService
+		.create(req.body)
+		.then(() => res.json({}))
+		.catch(err => next(err));
+});
 
+app.post("/api/v1/users/login", (req, res, next) => {
+	userService
+		.authenticate(req.body)
+		.then(user =>
+			user
+				? res.json(user)
+				: res
+						.status(400)
+						.json({ message: "Username or password is incorrect" })
+		)
+		.catch(err => next(err));
+});
 
+app.delete("/api/v1/users/:id", (req, res, next) => {
+	userService
+		.delete(req.params.id)
+		.then(() => res.json({}))
+		.catch(err => next(err));
+});
+
+//just for testing
+app.get("/api/v1/users/:id", (req, res, next) => {
+	userService
+		.getById(req.params.id)
+		.then(user => (user ? res.json(user) : res.sendStatus(404)))
+		.catch(err => next(err));
+});
+
+// NOTE: the below middleware has to be applied after calling the api so do not move it
+// global error handler
+app.use(errorHandler);
+
+// start server
+const port = 8000;
+app.listen(port, function() {
+	console.log("Server listening on port " + port);
+});

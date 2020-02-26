@@ -1,20 +1,24 @@
-var mongoose = require('mongoose');
-var Schema =  mongoose.Schema;
+var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
-    userName:{
-        type:String,
-        unique:true
-    },
-    email:{
-        type:String
-    },
-    password:{
-        type:String
-    },
-    token:{
-        type:String
-    }
+	userId: {
+		type: String,
+		unique: true
+	},
+
+	// Note hash : encrypted password
+
+	hash: {
+		type: String,
+		required: true
+	},
+
+	emailId: {
+		type: String
+	}
 });
 
-module.exports = mongoose.model('User',userSchema);
+userSchema.set("toJSON", { virtuals: true });
+
+module.exports = mongoose.model("User", userSchema);
