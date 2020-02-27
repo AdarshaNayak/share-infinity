@@ -2,5 +2,3 @@ node_modules/
 .vscode/
 dist/
 .cache/
-package-lock.json
-yarn.lock
