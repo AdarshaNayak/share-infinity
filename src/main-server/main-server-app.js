@@ -29,7 +29,7 @@ app.use(cors());
 app.post("/api/v1/users/register", (req, res, next) => {
 	userService
 		.create(req.body)
-		.then(() => res.json({}))
+		.then(() => res.json({ message: "success" }))
 		.catch(err => next(err));
 });
 
@@ -41,7 +41,7 @@ app.post("/api/v1/users/login", (req, res, next) => {
 				? res.json(user)
 				: res
 						.status(400)
-						.json({ message: "Username or password is incorrect" })
+						.json({ message: "userId or password is incorrect" })
 		)
 		.catch(err => next(err));
 });
