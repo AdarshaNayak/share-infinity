@@ -9,7 +9,7 @@ export default class loginController {
 		this.$timeout = $timeout;
 		this.error = false;
 		this.success = false;
-		this.username = "";
+		this.userId = "";
 		this.password = "";
 		this.message = "";
 	}
@@ -19,30 +19,25 @@ export default class loginController {
 		this.success = false;
 		console.log("in login !!");
 		const ctrl = this;
-		this.authService.login(this.username, this.password).then(
+		this.authService.login(this.userId, this.password).then(
 			function(response) {
-				if (response.data.status == "success") {
-					sessionStorage.user = true;
-					sessionStorage.username = ctrl.username;
+				console.log(response.data);
+				if (response.data && response.data.token) {
+					sessionStorage.setItem(
+						"currentUser",
+						JSON.stringify(response.data)
+					);
 					ctrl.success = true;
 					ctrl.message = "Login Successful!";
 					ctrl.$timeout(function() {
-						ctrl.$location.path("/listHotels");
+						ctrl.$location.path("/submitTask");
 					}, 500);
-				} else {
-					sessionStorage.user = false;
-					ctrl.error = true;
-					ctrl.message = "Wrong username or password!";
-					ctrl.username = "";
-					ctrl.password = "";
 				}
 			},
-			function() {
-				sessionStorage.user = false;
+			function(error) {
 				ctrl.error = true;
-				ctrl.message =
-					"Something went wrong on the server! Please try again!";
-				ctrl.username = "";
+				ctrl.message = error.data.message;
+				ctrl.userId = "";
 				ctrl.password = "";
 			}
 		);

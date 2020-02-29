@@ -9,10 +9,11 @@ export default class signupController {
 		this.$timeout = $timeout;
 		this.error = false;
 		this.success = false;
-		this.username = "";
+		this.userId = "";
 		this.password = "";
 		this.message = "";
 		this.repassword = "";
+		this.emailId = "";
 	}
 
 	register() {
@@ -20,27 +21,20 @@ export default class signupController {
 		this.success = false;
 		console.log("hi");
 		const ctrl = this;
-		this.authService.register(this.username, this.password).then(
+		this.authService.register(this.userId, this.password).then(
 			function(response) {
-				if (response.data.status == 1) {
-					ctrl.success = true;
-					ctrl.message = "Successfull! Redirecting to login..";
-					ctrl.$timeout(function() {
-						ctrl.$location.path("/");
-					}, 500);
-				} else {
-					ctrl.error = true;
-					ctrl.message = "Username already exists! Please try again!";
-					ctrl.username = "";
-					ctrl.password = "";
-				}
+				ctrl.success = true;
+				ctrl.message = "Successfull! Redirecting to login..";
+				ctrl.$timeout(function() {
+					ctrl.$location.path("/");
+				}, 500);
 			},
-			function() {
+			function(error) {
 				ctrl.error = true;
-				ctrl.message =
-					"Something went wrong on the server! Please try again!";
-				ctrl.username = "";
+				ctrl.message = error.data.message;
+				ctrl.userId = "";
 				ctrl.password = "";
+				ctrl.emailId = "";
 			}
 		);
 	}

@@ -6,27 +6,28 @@ export default class authService {
 	constructor($http, $timeout) {
 		this.$http = $http;
 		this.$timeout = $timeout;
-		this.ip = "http://localhost:5000";
+		this.ip = "http://localhost:8000";
 	}
 
-	register(username, password) {
-		return this.$http.post(this.ip + "/api/v1/register", {
-			username: username,
-			password: password
+	register(userId, password, emailId) {
+		return this.$http.post(this.ip + "/api/v1/users/register", {
+			userId: userId,
+			password: password,
+			emailId: emailId
 		});
 	}
 
 	isLoggedIn() {
-		if (sessionStorage.user == "true") {
+		if (sessionStorage.getItem("currentUser")) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	login(username, password) {
-		return this.$http.post(this.ip + "/api/v1/login", {
-			username: username,
+	login(userId, password) {
+		return this.$http.post(this.ip + "/api/v1/users/login", {
+			userId: userId,
 			password: password
 		});
 	}

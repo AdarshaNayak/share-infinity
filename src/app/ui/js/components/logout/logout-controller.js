@@ -9,10 +9,12 @@ export default class logoutController {
 	}
 
 	logout() {
-		const ctrl = this;
-		this.authService.logout().then(function() {
-			ctrl.$location.path("/");
-		});
+		//console.log("in logout");
+		this.authService.logout();
+		//console.log("after logout");
+
+		this.$location.path("/");
+		//console.log("after path");
 	}
 
 	isLoggedIn() {
