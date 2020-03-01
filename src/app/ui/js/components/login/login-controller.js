@@ -30,7 +30,7 @@ export default class loginController {
 					ctrl.success = true;
 					ctrl.message = "Login Successful!";
 					ctrl.$timeout(function() {
-						ctrl.$location.path("/submitTask");
+						ctrl.$location.path("/submit-task");
 					}, 500);
 				}
 			},

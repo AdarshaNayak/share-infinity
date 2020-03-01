@@ -1,0 +1,66 @@
+<div>
+	<md-sidenav class="md-sidenav-left" md-component-id="left">
+		<!-- <md-toolbar>
+			
+		</md-toolbar> -->
+
+		<md-toolbar class="md-tall md-hue-2">
+			<span flex></span>
+			<div layout="column" class="md-toolbar-tools-bottom inset">
+				<user-avatar></user-avatar>
+				<span></span>
+				<div>Hi, UserId</div>
+			</div>
+		</md-toolbar>
+
+		<md-subheader>Consumer Actions</md-subheader>
+		<md-list>
+			<md-item ng-repeat="item in $ctrl.consumer">
+				<md-button
+					style="width: 90%; text-align: center;"
+					ng-click="$ctrl.page()"
+					>{{item}}</md-button
+				>
+				<br />
+			</md-item>
+
+			<md-divider></md-divider>
+			<md-subheader>Provider Actions</md-subheader>
+
+			<md-switch
+				ng-model="$ctrl.providerMode"
+				aria-label="providerMode"
+				style="display: inline-block; position: relative; left: 50px;"
+			>
+				PROVIDER MODE
+			</md-switch>
+
+			<md-item ng-repeat="item in $ctrl.provider">
+				<md-button style="width: 90%; text-align: center;"
+					>{{item}}</md-button
+				>
+				<br />
+			</md-item>
+
+			<md-divider></md-divider>
+			<md-subheader>Common</md-subheader>
+
+			<md-item ng-repeat="item in $ctrl.common">
+				<md-button style="width: 90%; text-align: center;"
+					>{{item}}</md-button
+				>
+				<br />
+			</md-item>
+		</md-list>
+	</md-sidenav>
+
+	<div style="position: relative; top: -45px; width: 50px; left: 20px;">
+		<button
+			type="button"
+			ng-click="$ctrl.toggleLeft()"
+			class="btn btn-dark"
+		>
+			&#9776;
+		</button>
+	</div>
+</div>
