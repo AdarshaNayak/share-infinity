@@ -11,6 +11,7 @@ import { signupComponent } from "./components/signup";
 import { logoutComponent } from "./components/logout";
 import { submitTaskComponent } from "./components/submitTask";
 import { sideNavComponent } from "./components/side-nav";
+import { providerComponent } from "./components/provider";
 
 import authService from "./services/autentication-service";
 
@@ -30,7 +31,7 @@ angular
 	.component("logoutComponent", logoutComponent)
 	.component("submitTaskComponent", submitTaskComponent)
 	.component("sideNavComponent", sideNavComponent)
-
+	.component("providerComponent", providerComponent)
 	.service("authService", authService)
 
 	.config(function($routeProvider, $locationProvider) {
@@ -48,7 +49,11 @@ angular
 
 			.when("/submit-task", {
 				template: "<submit-task-component></submit-task-component>",
-				access: { restricted: true }
+				access: { restricted: false }
+			})
+			.when("/provider",{
+				template: "<provider-component></provider-component>",
+				access:{ restricted: false }
 			});
 
 		$locationProvider.html5Mode(true);
