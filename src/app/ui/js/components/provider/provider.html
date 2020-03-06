@@ -1,0 +1,49 @@
+<div class="card card-outline-secondary">
+    <div class="card-body align-items-center justify-content-center ">
+    <div class="btn-group row-cols-1 d-flex ">
+        <button
+            class="btn "
+            ng-class="{'btn-success' : $ctrl.state==='OFFLINE'}"
+            ng-click="$ctrl.changeStateTo('OFFLINE')"
+            ng-disabled="$ctrl.state === 'RUNNING'"
+        >
+            OFFLINE
+        </button>
+        <button
+                class="btn"
+                ng-class="{'btn-success' : $ctrl.state==='ONLINE' || $ctrl.state==='RUNNING'}"
+                ng-click="$ctrl.changeStateTo('ONLINE')"
+                ng-disabled="$ctrl.state === 'RUNNING'"
+        >
+            ONLINE
+        </button>
+    </div>
+
+
+    <h4 ng-if="$ctrl.state==='OFFLINE'"
+            class=" d-flex justify-content-center" style="margin-top: 100px"
+    >
+        YOU ARE NOT DISCOVERABLE
+    </h4>
+
+        <div ng-if="$ctrl.state=== 'ONLINE' " class="card align-items-center" >
+            <h3 style="padding-top: 90px">Recommended charge based on your machine configuration <span style="color: #34ce57; padding-left: 15px">100</span> </h3>
+            <div style="padding-top: 50px; padding-bottom: 70px">
+                <h3 style="display: inline;padding-right: 40px;">Your rate/min</h3>
+                <input type="number" name="rate"/>
+            </div>
+            <button
+             ng-click="$ctrl.changeStateTo('RUNNING')"
+             class="btn-success"
+             style="margin-bottom: 50px"
+            >Go ONLINE</button>
+        </div>
+    </div>
+    <div ng-if="$ctrl.state === 'RUNNING'" style="margin-top: 100px; margin-bottom: 40px" >
+        <h3
+        style="display: inline; margin-left: 470px"
+        >
+            Task Running</h3>
+        <img src="./../../../images/three-dots.gif" style="width: 60px;"/>
+    </div>
+</div>
