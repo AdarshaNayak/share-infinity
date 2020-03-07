@@ -7,7 +7,7 @@ export default class providerController {
         this.authService = authService;
         this.$location = $location;
         this.$timeout = $timeout;
-        this.state = "ONLINE";
+        this.state = "OFFLINE";
     }
     changeStateTo(state){
         this.state = state;
