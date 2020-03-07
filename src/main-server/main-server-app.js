@@ -16,7 +16,10 @@ const errorHandler = require("./_helpers/error-handler");
 
 //Importing services
 const userService = require("./services/user.service");
-const loadDatabase =  require('./_helpers/loadDatabase');
+const taskService = require("./services/taskService");
+
+//helpers
+//const loadDatabase =  require('./_helpers/loadDatabase');
 //loadDatabase.loadDatabase(); //do it only first time!
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -60,6 +63,16 @@ app.get("/api/v1/users/:id", (req, res, next) => {
 	userService
 		.getById(req.params.id)
 		.then(user => (user ? res.json(user) : res.sendStatus(404)))
+		.catch(err => next(err));
+});
+
+
+app.get("/api/v1/providers/:cpu/:ram/:storage",(req,res,next) => {
+	taskService
+		.getProviders(parseInt(req.params.cpu),parseInt(req.params.ram),parseInt(req.params.storage))
+		.then(response => {
+			response ? res.send(response) : res.sendStatus(400);
+		})
 		.catch(err => next(err));
 });
 
