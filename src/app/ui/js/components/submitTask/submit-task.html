@@ -3,15 +3,23 @@
 		<h3 class="mb-0">Enter system configuration details</h3>
 	</div>
 	<div class="card-body">
-		<form autocomplete="off" class="form" role="form">
+		<form
+			autocomplete="off"
+			class="form"
+			role="form"
+			ng-submit="$ctrl.getProviders()"
+		>
 			<div class="form-group">
 				<label for="inputName">RAM</label>
 				<input
 					class="form-control"
 					id="RAM"
 					placeholder="Enter required RAM in GB"
-					type="text"
+					type="number"
 					aria-required="true"
+					min="1"
+					required
+					ng-model="$ctrl.ram"
 				/>
 			</div>
 
@@ -21,7 +29,10 @@
 					class="form-control"
 					id="cores"
 					placeholder="Enter required CPU cores"
-					type="text"
+					type="number"
+					min="1"
+					required
+					ng-model="$ctrl.cpuCores"
 				/>
 			</div>
 
@@ -31,7 +42,10 @@
 					class="form-control"
 					id="storage"
 					placeholder="Enter minimum required storage in GB"
-					type="text"
+					type="number"
+					min="1"
+					required
+					ng-model="$ctrl.storage"
 				/>
 			</div>
 

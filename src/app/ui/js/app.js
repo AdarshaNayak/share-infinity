@@ -12,8 +12,10 @@ import { logoutComponent } from "./components/logout";
 import { submitTaskComponent } from "./components/submitTask";
 import { sideNavComponent } from "./components/side-nav";
 import { providerComponent } from "./components/provider";
+import { showHostsComponent } from "./components/showHosts";
 
 import authService from "./services/autentication-service";
+import taskService from "./services/task-service";
 
 angular
 	.module("ShareInfinity", [
@@ -32,7 +34,10 @@ angular
 	.component("submitTaskComponent", submitTaskComponent)
 	.component("sideNavComponent", sideNavComponent)
 	.component("providerComponent", providerComponent)
+	.component("showHostsComponent", showHostsComponent)
+
 	.service("authService", authService)
+	.service("taskService", taskService)
 
 	.config(function($routeProvider, $locationProvider) {
 		$routeProvider
@@ -51,9 +56,14 @@ angular
 				template: "<submit-task-component></submit-task-component>",
 				access: { restricted: false }
 			})
-			.when("/provider",{
+			.when("/provider", {
 				template: "<provider-component></provider-component>",
-				access:{ restricted: false }
+				access: { restricted: false }
+			})
+
+			.when("/show-hosts", {
+				template: "<show-hosts-component></show-hosts-component>",
+				access: { restricted: false }
 			});
 
 		$locationProvider.html5Mode(true);
