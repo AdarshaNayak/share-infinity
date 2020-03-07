@@ -16,6 +16,8 @@ const errorHandler = require("./_helpers/error-handler");
 
 //Importing services
 const userService = require("./services/user.service");
+const loadDatabase =  require('./_helpers/loadDatabase');
+//loadDatabase.loadDatabase(); //do it only first time!
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

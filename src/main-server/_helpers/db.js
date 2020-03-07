@@ -8,5 +8,10 @@ mongoose.connect(config.connectionString, {
 mongoose.Promise = global.Promise;
 
 module.exports = {
-	User: require("../models/user")
+	User: require("../models/user"),
+	Provider:require("../models/provider"),
+	SystemInfo:require("../models/systemInfo"),
+	Task: require("../models/task"),
+	TaskFiles: require("../models/taskFiles"),
+	CompletedTasks: require("../models/completedTask")
 };
