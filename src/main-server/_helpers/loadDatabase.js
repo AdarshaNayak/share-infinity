@@ -15,7 +15,7 @@ const CompletedTasks = db.CompletedTasks;
     }
 
     for(let i=1;i<=20;i++){
-        Provider.create({providerId:`CORONA${i}`,isOnline: i<=10 ? true:false,providerInUse: i<=5 ? true:false,isAssigned: i<=10 ? true: false, providerCharge:Math.random()*100,ratings: Math.random()*5});
+        Provider.create({providerId:`CORONA${i}`,isOnline: i<=10 ? true:false,providerInUse: i<=5 ? true:false,isAssigned: i<=5 ? true: false, providerCharge:Math.random()*100,ratings: Math.random()*5});
     }
 }
 
