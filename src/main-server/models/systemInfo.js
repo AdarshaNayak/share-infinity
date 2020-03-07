@@ -3,7 +3,7 @@ var Schema =  mongoose.Schema;
 
 var systemInfoSchema = new Schema({
     userId:{
-        type: Schema.Types.ObjectId,
+        type:String,
         ref:'User',
         required:true
     },
@@ -14,18 +14,6 @@ var systemInfoSchema = new Schema({
         type:Number
     },
     storage:{
-        type:Number
-    },
-    isOnline:{
-        type:Boolean
-    },
-    providerInUse:{
-        type:Boolean
-    },
-    containerRunning:{
-        type:Boolean
-    },
-    providerCharge:{
         type:Number
     }
 });

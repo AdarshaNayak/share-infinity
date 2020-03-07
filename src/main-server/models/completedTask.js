@@ -3,13 +3,14 @@ var Schema =  mongoose.Schema;
 
 var completedTaskSchema = new Schema({
     userId:{
-        type: Schema.Types.ObjectId,
+        type: String,
         ref:'User',
         required:true
     },
     providerId:{
-        type: Schema.Types.ObjectId,
-        ref:'User'
+        type: String,
+        ref:'User',
+        required: true
     },
     rating:{
         type:Number

@@ -8,31 +8,19 @@ var taskSchema = new Schema({
         auto: true,
         unique:true
     },
-    userId:{
-        type: Schema.Types.ObjectId,
+    consumerId:{
+        type: String,
         ref:'User'
     },
     providerId:{
-        type: Schema.Types.ObjectId,
+        type:String,
         ref:'User'
     },
-    dataFileIdentifier:{
-        type:String
-    },
-    dockerFileIdentifier:{
-        type:String
-    },
-    dataFileKey:{
-        type:String
-    },
-    resultFileIdentifier:{
-        type:String
-    },
-    resultFileKey:{
-        type:String
+    isContainerRunning:{
+        type:Boolean
     },
     isCompleted:{
-        type:String
+        type:Boolean
     },
     startTime:{
         type:Date

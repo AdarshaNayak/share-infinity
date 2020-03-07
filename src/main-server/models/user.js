@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
 	userId: {
 		type: String,
-		unique: true
+		unique: true,
+		required: true
 	},
 
 	// Note hash : encrypted password
