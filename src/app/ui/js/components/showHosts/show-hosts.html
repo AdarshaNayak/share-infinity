@@ -1,0 +1,65 @@
+<div class="card card-outline-dark">
+	<div class="card-header bg-dark text-white">
+		<h3 class="mb-0">Select hosts and submit task files</h3>
+	</div>
+	<div class="card-body">
+		<div ng-repeat="item in $ctrl.providers">
+			<div
+				class="card"
+				ng-attr-id="{{item.providerId}}"
+				ng-hide="$ctrl.submittedProviders.indexOf(item.providerId)>-1"
+			>
+				<div flex-gt-sm="50"></div>
+				<h5 class="card-header">
+					<md-checkbox
+						ng-checked="$ctrl.selection.indexOf(item.providerId)>-1"
+						ng-click="$ctrl.toggleSelection(item.providerId)"
+						aria-label="Checkbox 1"
+					>
+					</md-checkbox>
+					Provider ID : {{ item.providerId }}
+				</h5>
+
+				<div class="card-body">
+					<h5 class="card-title">RAM : {{item.ram}} GB</h5>
+					<h5 class="card-title">CPU cores : {{item.cpu}}</h5>
+					<h5 class="card-title">Storage : {{item.storage}} GB</h5>
+
+					<form
+						ng-show="$ctrl.selection.indexOf(item.providerId)>-1"
+						ng-submit="$ctrl.submitTask(item.providerId)"
+					>
+						<label>File Path</label>
+						<input
+							type="text"
+							placeholder="Copy & paste the zip file here ..."
+							class="form-control"
+							name="filepath"
+							ng-attr-id="{{'filepath_'+ item.providerId}}"
+							required
+						/>
+						<br />
+						<label>Commands</label>
+						<div class="form-group">
+							<textarea
+								class="form-control"
+								id="txtarea"
+								rows="3"
+								placeholder="Enter any commands that must be run .."
+								ng-attr-id="{{'commands_'+ item.providerId}}"
+								required
+							></textarea>
+						</div>
+						<br />
+						<input
+							type="submit"
+							class="btn btn-primary"
+							value="Submit"
+						/>
+					</form>
+				</div>
+			</div>
+			<br />
+		</div>
+	</div>
+</div>
