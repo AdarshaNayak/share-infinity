@@ -16,16 +16,16 @@ var taskSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref:'User'
     },
-    datafileIdentifier:{
+    dataFileIdentifier:{
         type:String
     },
-    dockerfileIdentifier:{
+    dockerFileIdentifier:{
         type:String
     },
-    DatafileKey:{
+    dataFileKey:{
         type:String
     },
-    ResultFileIdentifier:{
+    resultFileIdentifier:{
         type:String
     },
     resultFileKey:{
