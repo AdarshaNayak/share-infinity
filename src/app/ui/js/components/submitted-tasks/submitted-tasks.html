@@ -1,0 +1,48 @@
+<div ng-show="$ctrl.error" class="alert alert-danger">
+	{{ $ctrl.message }}
+</div>
+<div ng-show="$ctrl.success" class="alert alert-success">
+	{{ $ctrl.message }}
+</div>
+<div class="card card-outline-dark">
+	<div class="card-header bg-dark text-white">
+		<h3 class="mb-0">Submitted tasks</h3>
+	</div>
+	<div class="card-body">
+		<div ng-repeat="item in $ctrl.tasks">
+			<div
+				class="card"
+				ng-attr-id="{{item.transactionId}}"
+				ng-class="{'border-success': item.status == 'completed', 'border-primary': item.status == 'running','border-danger': item.status == 'failed'}"
+			>
+				<div flex-gt-sm="50"></div>
+				<h5
+					class="card-header text-white"
+					ng-class="{'bg-success': item.status == 'completed', 'bg-primary': item.status == 'running','bg-danger': item.status == 'failed'}"
+				>
+					Transaction ID : {{ item.transactionId }}
+				</h5>
+
+				<div class="card-body">
+					<h5 class="card-title">Provider ID : {{item.userId}}</h5>
+					<h5 class="card-title">Status : {{item.status}}</h5>
+				</div>
+
+				<form
+					ng-submit="$ctrl.getResults(item.transactionId)"
+					ng-show="item.status == 'completed'"
+				>
+					<input
+						type="submit"
+						class="btn btn-primary"
+						value="Get results"
+						style="position: relative; left: 10px;"
+					/>
+				</form>
+
+				<br />
+			</div>
+			<br />
+		</div>
+	</div>
+</div>
