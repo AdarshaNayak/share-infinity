@@ -3,6 +3,7 @@ const db =  require('../_helpers/db');
 const User = db.User;
 const Provider = db.Provider;
 const SystemInfo = db.SystemInfo;
+const Task = db.Task;
 
 async function getProviders(minCpu,minRam,minStorage){
 
@@ -31,6 +32,21 @@ async function getProviders(minCpu,minRam,minStorage){
         })
 }
 
+async function createTask({userId,providerId}){
+   return Task.create({consumerId: userId,providerId:providerId,isContainerRunning:false,isCompleted:false,startTime:null,endTime:null,cost:null})
+        .then((response)=>{
+        return {
+            ['transactionId']:response.transactionId,
+            ['providerId']:providerId
+        }
+    })
+        .catch(err => {
+            return err;
+        });
+
+}
+
 module.exports = {
     getProviders,
+    createTask
 }

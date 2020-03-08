@@ -76,6 +76,17 @@ app.get("/api/v1/providers/:cpu/:ram/:storage",(req,res,next) => {
 		.catch(err => next(err));
 });
 
+app.post("/api/v1/tasks",(req,res,next) => {
+	taskService.createTask(req.body)
+		.then(response => {
+			console.log(response);
+			res.send(response);
+		})
+		.catch(err => {
+			next(err);
+		});
+});
+
 // NOTE: the below middleware has to be applied after calling the api so do not move it
 // global error handler
 app.use(errorHandler);
