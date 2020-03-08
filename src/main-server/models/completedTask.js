@@ -2,7 +2,12 @@ var mongoose = require('mongoose');
 var Schema =  mongoose.Schema;
 
 var completedTaskSchema = new Schema({
-    userId:{
+    transactionId:{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        unique:true
+    },
+    consumerId:{
         type: String,
         ref:'User',
         required:true
