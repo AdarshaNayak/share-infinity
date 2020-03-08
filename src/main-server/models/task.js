@@ -27,9 +27,6 @@ var taskSchema = new Schema({
     },
     endTime:{
         type:Date
-    },
-    cost:{
-        type:Number
     }
 });
 

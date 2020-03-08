@@ -16,6 +16,11 @@ const errorHandler = require("./_helpers/error-handler");
 
 //Importing services
 const userService = require("./services/user.service");
+const taskService = require("./services/taskService");
+
+//helpers
+//const loadDatabase =  require('./_helpers/loadDatabase');
+//loadDatabase.loadDatabase(); //do it only first time!
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -58,6 +63,35 @@ app.get("/api/v1/users/:id", (req, res, next) => {
 	userService
 		.getById(req.params.id)
 		.then(user => (user ? res.json(user) : res.sendStatus(404)))
+		.catch(err => next(err));
+});
+
+
+app.get("/api/v1/providers/:cpu/:ram/:storage",(req,res,next) => {
+	taskService
+		.getProviders(parseInt(req.params.cpu),parseInt(req.params.ram),parseInt(req.params.storage))
+		.then(response => {
+			response ? res.send(response) : res.sendStatus(400);
+		})
+		.catch(err => next(err));
+});
+
+app.post("/api/v1/tasks",(req,res,next) => {
+	taskService.createTask(req.body)
+		.then(response => {
+			console.log(response);
+			res.send(response);
+		})
+		.catch(err => {
+			next(err);
+		});
+});
+
+app.get("/api/v1/tasks/:userId/:type",(req,res,next) => {
+	taskService.getTasks(req.params.userId,req.params.type)
+		.then(response => {
+			res.send(response);
+		})
 		.catch(err => next(err));
 });
 
