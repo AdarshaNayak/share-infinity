@@ -15,11 +15,20 @@
 
 		<md-subheader>Consumer Actions</md-subheader>
 		<md-list>
-			<md-item ng-repeat="item in $ctrl.consumer">
+			<md-item>
 				<md-button
 					style="width: 90%; text-align: center;"
-					ng-click="$ctrl.page()"
-					>{{item}}</md-button
+					ng-click="$ctrl.goToSubmitTask()"
+					>Submit Task</md-button
+				>
+				<br />
+			</md-item>
+
+			<md-item>
+				<md-button
+					style="width: 90%; text-align: center;"
+					ng-click="$ctrl.goToSubmittedTasks()"
+					>Submitted Tasks</md-button
 				>
 				<br />
 			</md-item>
@@ -35,9 +44,16 @@
 				PROVIDER MODE
 			</md-switch>
 
-			<md-item ng-repeat="item in $ctrl.provider">
+			<md-item>
 				<md-button style="width: 90%; text-align: center;"
-					>{{item}}</md-button
+					>Running Tasks</md-button
+				>
+				<br />
+			</md-item>
+
+			<md-item>
+				<md-button style="width: 90%; text-align: center;"
+					>Set Usage Price</md-button
 				>
 				<br />
 			</md-item>
@@ -45,9 +61,9 @@
 			<md-divider></md-divider>
 			<md-subheader>Common</md-subheader>
 
-			<md-item ng-repeat="item in $ctrl.common">
+			<md-item>
 				<md-button style="width: 90%; text-align: center;"
-					>{{item}}</md-button
+					>Wallet</md-button
 				>
 				<br />
 			</md-item>

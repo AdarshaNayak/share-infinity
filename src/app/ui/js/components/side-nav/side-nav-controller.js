@@ -8,10 +8,6 @@ export default class sideNavController {
 		this.$log = $log;
 		this.$location = $location;
 		this.toggleLeft = this.buildToggler("left");
-
-		this.consumer = ["Submit Task", "Submitted Tasks"];
-		this.provider = ["Running Tasks", "Set Usage Price"];
-		this.common = ["Wallet"];
 	}
 
 	buildToggler(componentId) {
@@ -21,8 +17,13 @@ export default class sideNavController {
 		};
 	}
 
-	page() {
+	goToSubmitTask() {
 		this.$location.path("/submit-task");
+		this.toggleLeft();
+	}
+
+	goToSubmittedTasks() {
+		this.$location.path("/submitted-tasks");
 		this.toggleLeft();
 	}
 }
