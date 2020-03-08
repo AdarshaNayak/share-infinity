@@ -103,6 +103,14 @@ app.post("/api/v1/task/status",(req,res,next) => {
 		.catch(err => next(err));
 });
 
+app.get("/api/v1/task/status/:transactionId",(req,res,next) => {
+	taskService.getTaskStatus(req.params.transactionId)
+		.then(response => {
+			response ? res.send(response) : res.sendStatus(400)
+		})
+		.catch(error => next(error));
+});
+
 // NOTE: the below middleware has to be applied after calling the api so do not move it
 // global error handler
 app.use(errorHandler);

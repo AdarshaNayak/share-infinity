@@ -96,10 +96,28 @@ async function updateTaskStatus({transactionId, status}){
      return {"message" : "updated Successfully"};
 }
 
+async function getTaskStatus(transactionId) {
+    const task = await Task.findOne({transactionId:transactionId});
+    if(task.isCompleted === true){
+       return  CompletedTasks.findOne({transactionId:transactionId})
+            .then(completedTask => {
+                return {
+                    "status":completedTask.status
+                };
+            })
+            .catch(err => err);
+    }
+    else{
+        return {
+            "status":"running"
+        };
+    }
+}
+
 module.exports = {
     getProviders,
     createTask,
     getTasks,
     updateTaskStatus,
-
+    getTaskStatus
 }
