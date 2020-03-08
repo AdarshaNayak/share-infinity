@@ -11,7 +11,7 @@ export default class showHostsController {
 		this.selection = [];
 		this.submittedProviders = [];
 
-		this.providers = JSON.parse(sessionStorage.getItem("providers"));
+		this.getHosts();
 		this.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 		this.uderId = this.currentUser.userId;
 		console.log(this.providers);
@@ -57,20 +57,35 @@ export default class showHostsController {
 
 				console.log(commandsToRun);
 
-				// ctrl.taskService
-				// 	.createDockerfile(transactionId, commandsToRun, filePath)
-				// 	.then(
-				// 		function(response) {
-				// 			console.log(response.data);
-				// 		},
-				// 		function(err) {
-				// 			console.log(err);
-				// 		}
-				// 	);
+				ctrl.taskService
+					.createDockerfile(transactionId, commandsToRun, filePath)
+					.then(
+						function(response) {
+							console.log(response.data);
+						},
+						function(err) {
+							console.log(err);
+						}
+					);
 			},
 			function() {
 				"failed to submit task";
 			}
 		);
+	}
+
+	getHosts() {
+		const ctrl = this;
+		const config = JSON.parse(sessionStorage.getItem("config"));
+		this.taskService
+			.getProviders(config.ram, config.cpuCores, config.storage)
+			.then(
+				function(response) {
+					ctrl.providers = response.data.providers;
+				},
+				function(err) {
+					console.log("Some error!");
+				}
+			);
 	}
 }
