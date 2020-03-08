@@ -7,7 +7,7 @@ export default class taskService {
 		this.$http = $http;
 		this.$timeout = $timeout;
 		this.ip = "http://localhost:8000";
-		this.localIp = "http://localhost:3000";
+		this.localIp = "http://localhost:8000";
 	}
 
 	getProviders(ram, cpuCores, storage) {
@@ -36,5 +36,21 @@ export default class taskService {
 			commandsToRun: commandsToRun,
 			filePath: filePath
 		});
+	}
+
+	getSubmittedTasks(userId) {
+		return this.$http.get(
+			this.ip + "/api/v1/tasks/" + userId + "/consumer"
+		);
+	}
+
+	getResults(userId, transactionId) {
+		return this.$http.get(
+			this.localIp +
+				"/api/v1/local/results/" +
+				userId +
+				"/" +
+				transactionId
+		);
 	}
 }
