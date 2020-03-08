@@ -87,6 +87,14 @@ app.post("/api/v1/tasks",(req,res,next) => {
 		});
 });
 
+app.get("/api/v1/tasks/:userId/:type",(req,res,next) => {
+	taskService.getTasks(req.params.userId,req.params.type)
+		.then(response => {
+			res.send(response);
+		})
+		.catch(err => next(err));
+});
+
 // NOTE: the below middleware has to be applied after calling the api so do not move it
 // global error handler
 app.use(errorHandler);

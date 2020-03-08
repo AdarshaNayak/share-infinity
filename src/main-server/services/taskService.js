@@ -46,7 +46,35 @@ async function createTask({userId,providerId}){
 
 }
 
+async function getTasks(userId,type){
+    const key = type === "consumer" ? "consumerId" : "providerId";
+    return Task.find({[key]: {$eq : userId} })
+        .then(async (tasks) => {
+            const result = []
+            for (const task of tasks) {
+               let taskItem = {};
+                taskItem = {
+                    ['userId']: type==="consumer" ? task.providerId : task.consumerId,
+                    ['transactionId']: task.transactionId,
+                    ['status'] : "running"
+                }
+               if(task.isCompleted){
+                   await db.CompletedTasks.findOne({transactionId: task.transactionId})
+                       .then((completedTask) => {
+                           taskItem['status'] = completedTask.status ? "completed": "failed" ;
+                           taskItem['rating'] = completedTask.rating;
+                           taskItem['cost'] = completedTask.cost;
+                       });
+               }
+               result.push(taskItem);
+            }
+            return result;
+        })
+        .catch(err => err);
+}
+
 module.exports = {
     getProviders,
-    createTask
+    createTask,
+    getTasks
 }
