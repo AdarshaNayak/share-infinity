@@ -56,22 +56,22 @@ angular
 
 			.when("/submit-task", {
 				template: "<submit-task-component></submit-task-component>",
-				access: { restricted: false }
+				access: { restricted: true }
 			})
 			.when("/provider", {
 				template: "<provider-component></provider-component>",
-				access: { restricted: false }
+				access: { restricted: true }
 			})
 
 			.when("/show-hosts", {
 				template: "<show-hosts-component></show-hosts-component>",
-				access: { restricted: false }
+				access: { restricted: true }
 			})
 
 			.when("/submitted-tasks", {
 				template:
 					"<submitted-tasks-component></submitted-tasks-component>",
-				access: { restricted: false }
+				access: { restricted: true }
 			});
 
 		$locationProvider.html5Mode(true);
