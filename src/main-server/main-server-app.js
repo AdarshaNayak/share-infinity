@@ -95,6 +95,14 @@ app.get("/api/v1/tasks/:userId/:type",(req,res,next) => {
 		.catch(err => next(err));
 });
 
+app.post("/api/v1/task/status",(req,res,next) => {
+	taskService.updateTaskStatus(req.body)
+		.then((response) => {
+			response ? res.send(response) : res.sendStatus(400);
+		})
+		.catch(err => next(err));
+});
+
 // NOTE: the below middleware has to be applied after calling the api so do not move it
 // global error handler
 app.use(errorHandler);

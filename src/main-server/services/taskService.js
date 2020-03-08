@@ -4,6 +4,7 @@ const User = db.User;
 const Provider = db.Provider;
 const SystemInfo = db.SystemInfo;
 const Task = db.Task;
+const CompletedTasks = db.CompletedTasks
 
 async function getProviders(minCpu,minRam,minStorage){
 
@@ -61,20 +62,44 @@ async function getTasks(userId,type){
                if(task.isCompleted){
                    await db.CompletedTasks.findOne({transactionId: task.transactionId})
                        .then((completedTask) => {
-                           taskItem['status'] = completedTask.status ? "completed": "failed" ;
+                           if(!completedTask) throw new Error("task not found");
+                           taskItem['status'] = completedTask.status;
                            taskItem['rating'] = completedTask.rating;
                            taskItem['cost'] = completedTask.cost;
+                       }).catch(err => {
+                           console.log("error ",err);
                        });
                }
                result.push(taskItem);
             }
-            return result;
+            return {"results":result};
         })
         .catch(err => err);
+}
+
+async function updateTaskStatus({transactionId, status}){
+     const task = await Task.findOne({transactionId:transactionId});
+     //console.log(task);
+      task.isCompleted = true;
+      task.save().then((task) => {
+            CompletedTasks.create({
+                transactionId:task.transactionId,
+                consumerId:task.consumerId,
+                providerId:task.providerId,
+                status:status
+            })
+                .then(response => {
+                    return;
+                })
+      })
+          .catch(err => err);
+     return {"message" : "updated Successfully"};
 }
 
 module.exports = {
     getProviders,
     createTask,
-    getTasks
+    getTasks,
+    updateTaskStatus,
+
 }
