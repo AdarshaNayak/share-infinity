@@ -15,19 +15,13 @@ export default class submitTaskController {
 	}
 
 	getProviders() {
-		const ctrl = this;
-		this.taskService
-			.getProviders(this.ram, this.cpuCores, this.storage)
-			.then(
-				function(response) {
-					sessionStorage.providers = JSON.stringify(
-						response.data.providers
-					);
-					ctrl.$location.path("/show-hosts");
-				},
-				function(err) {
-					console.log("Some error!");
-				}
-			);
+		const config = {
+			ram: this.ram,
+			cpuCores: this.cpuCores,
+			storage: this.storage
+		};
+		console.log(config);
+		sessionStorage.config = JSON.stringify(config);
+		this.$location.path("/show-hosts");
 	}
 }
