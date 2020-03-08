@@ -13,5 +13,6 @@ module.exports = {
 	SystemInfo:require("../models/systemInfo"),
 	Task: require("../models/task"),
 	TaskFiles: require("../models/taskFiles"),
-	CompletedTasks: require("../models/completedTask")
+	CompletedTasks: require("../models/completedTask"),
+	TaskAllocatedProviders: require("../models/taskAllocatedProviders"),
 };
