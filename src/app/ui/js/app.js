@@ -13,6 +13,7 @@ import { submitTaskComponent } from "./components/submitTask";
 import { sideNavComponent } from "./components/side-nav";
 import { providerComponent } from "./components/provider";
 import { showHostsComponent } from "./components/showHosts";
+import { submittedTasksComponent } from "./components/submitted-tasks";
 
 import authService from "./services/autentication-service";
 import taskService from "./services/task-service";
@@ -35,6 +36,7 @@ angular
 	.component("sideNavComponent", sideNavComponent)
 	.component("providerComponent", providerComponent)
 	.component("showHostsComponent", showHostsComponent)
+	.component("submittedTasksComponent", submittedTasksComponent)
 
 	.service("authService", authService)
 	.service("taskService", taskService)
@@ -63,6 +65,12 @@ angular
 
 			.when("/show-hosts", {
 				template: "<show-hosts-component></show-hosts-component>",
+				access: { restricted: false }
+			})
+
+			.when("/submitted-tasks", {
+				template:
+					"<submitted-tasks-component></submitted-tasks-component>",
 				access: { restricted: false }
 			});
 
