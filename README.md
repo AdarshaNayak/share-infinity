@@ -9,3 +9,9 @@
 ### npm install
 
 ### npx parcel index.html
+
+# steps to run main-server
+
+### cd src/main-server
+
+### node main-server-app.js

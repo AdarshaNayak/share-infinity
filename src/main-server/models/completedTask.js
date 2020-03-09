@@ -24,7 +24,7 @@ var completedTaskSchema = new Schema({
         type:Number
     },
     status:{
-        type:Boolean
+        type:String
     }
 });
 

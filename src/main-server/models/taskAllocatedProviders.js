@@ -11,4 +11,6 @@ const taskAllocatedProvidersSchema =  new Schema({
         type: String,
         ref:'User'
     }
-})
+});
+
+module.exports = mongoose.model('taskAllocatedProviders',taskAllocatedProvidersSchema);

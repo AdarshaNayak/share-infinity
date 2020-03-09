@@ -95,6 +95,64 @@ app.get("/api/v1/tasks/:userId/:type",(req,res,next) => {
 		.catch(err => next(err));
 });
 
+app.post("/api/v1/task/status",(req,res,next) => {
+	taskService.updateTaskStatus(req.body)
+		.then((response) => {
+			response ? res.send(response) : res.sendStatus(400);
+		})
+		.catch(err => next(err));
+});
+
+app.get("/api/v1/task/status/:transactionId",(req,res,next) => {
+	taskService.getTaskStatus(req.params.transactionId)
+		.then(response => {
+			response ? res.send(response) : res.sendStatus(400)
+		})
+		.catch(error => next(error));
+});
+
+app.post("/api/v1/task/time",(req,res,next) => {
+	taskService.setTaskTime(req.body)
+		.then(response => {
+			response ? res.send(response) : res.sendStatus(400)
+		})
+		.catch(error => next(error));
+});
+
+app.get("/api/v1/task/time/:transactionId",(req,res,next) => {
+	taskService.getTaskTime(req.params.transactionId)
+		.then(response => {
+			response ? res.send(response) : res.sendStatus(400)
+		})
+		.catch(error => next(error));
+});
+
+app.post("/api/v1/task/cost",(req,res,next) => {
+	taskService.setTaskCost(req.body)
+		.then(response => {
+			response ? res.send(response) : res.sendStatus(400)
+		})
+		.catch(error => next(error));
+});
+
+app.post("/api/v1/task/fileIdentifier",(req,res,next) => {
+	taskService.setFileIdentifier(req.body)
+		.then(response => {
+			response ? res.send(response) : res.sendStatus(400)
+		})
+		.catch(error => next(error));
+});
+
+app.get("/api/v1/task/fileIdentifier/:type/:transactionId",(req,res,next) => {
+	taskService.getFileIdentifier(req.params.transactionId,req.params.type)
+		.then(response => {
+			response ? res.send(response) : res.sendStatus(400)
+		})
+		.catch(error => next(error));
+});
+
+
+
 // NOTE: the below middleware has to be applied after calling the api so do not move it
 // global error handler
 app.use(errorHandler);
