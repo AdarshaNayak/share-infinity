@@ -2,9 +2,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const axios = require("axios");
 const app = express();
 const port = 3000;
 const vmIp = "http://localhost:8000";
+let timeoutObj = null;
+const { exec } = require('child_process');
 
 const createDockerFile = require("./createDockerFile");
 const ipfsHelper = require("./_helpers/cmdHelper");
@@ -43,6 +46,43 @@ app.get("/api/v1/local/file/:hash",(req,res) => {
 			res.send(response);
 		})
 		.catch(error => res.sendStatus(400));
+});
+
+app.get("/api/v1/local/polling/provider/:userId/:option",(req,res) => {
+	const option = req.params.option;
+	const userId = req.params.userId;
+
+	if(option == "start"){
+			axios.get(vmIp+"/api/v1/polling/taskRequired/"+userId)
+				.then(response => {
+					const transactionId = response.data.transactionId;
+					console.log(transactionId);
+					if(transactionId !== null){
+						axios.get(vmIp+"/api/v1/task/fileIdentifier/provider/"+transactionId)
+							.then(response => {
+
+								ipfsHelper.execShellCommand("mkdir "+transactionId)
+									.then(() => {
+										ipfsHelper.execShellCommand("pwd")
+											.then((path) => {
+												console.log("path",path.slice(0,-1)+"adu");
+												ipfsHelper.ipfsGet(response.data["dataFileIdentifier"],path.slice(0,-1)+"/"+transactionId+"/data.zip").then();
+												ipfsHelper.ipfsGet(response.data["dockerFileIdentifier"],path.slice(0,-1)+"/"+transactionId+"/dockerfile").then();
+											})
+									})
+							})
+					}
+					else{
+					 timeoutObj = setTimeout(function () {
+							http.get("localhost:"+port+"/api/v1/local/polling/provider/"+userId+"start");
+						},5000);
+					}
+				})
+	}
+	else if(option === "stop"){
+		clearTimeout(timeoutObj);
+	}
+	res.sendStatus(200);
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
