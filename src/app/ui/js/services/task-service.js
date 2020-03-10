@@ -7,7 +7,7 @@ export default class taskService {
 		this.$http = $http;
 		this.$timeout = $timeout;
 		this.ip = "http://localhost:8000";
-		this.localIp = "http://localhost:8000";
+		this.localIp = "http://localhost:3000";
 	}
 
 	getProviders(ram, cpuCores, storage) {
