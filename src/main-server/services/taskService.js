@@ -204,6 +204,22 @@ async function getFileIdentifier(transactionId,type){
     }
 }
 
+async function getTaskAllocatedStatus(userId){
+    const status = await TaskAllocatedProviders.findOne({providerId:userId});
+    if(status === null){
+        return {
+            "transactionId" : null
+        }
+    }
+    else {
+        return {
+            "transactionId" : status.transactionId
+        }
+    }
+}
+
+
+
 module.exports = {
     getProviders,
     createTask,
@@ -214,5 +230,6 @@ module.exports = {
     getTaskTime,
     setTaskCost,
     setFileIdentifier,
-    getFileIdentifier
+    getFileIdentifier,
+    getTaskAllocatedStatus
 }
