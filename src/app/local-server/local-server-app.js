@@ -7,6 +7,7 @@ const port = 3000;
 const vmIp = "http://localhost:8000";
 
 const createDockerFile = require("./createDockerFile");
+const ipfsHelper = require("./_helpers/cmdHelper");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -23,6 +24,25 @@ app.post("/api/v1/local/dockerconfig", async (req, res) => {
 	res.send({
 		message: "Task submitted successfully"
 	});
+});
+
+app.post("/api/v1/local/addFile",(req,res) => {
+	const { filePath} = req.body;
+	ipfsHelper.ipfsAdd(filePath)
+		.then((response => {
+			res.send({
+				"fileIdentifier" : response
+			});
+		}))
+		.catch(err => res.sendStatus(400));
+});
+
+app.get("/api/v1/local/file/:hash",(req,res) => {
+	ipfsHelper.ipfsGet(req.params.hash)
+		.then(response => {
+			res.send(response);
+		})
+		.catch(error => res.sendStatus(400));
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
