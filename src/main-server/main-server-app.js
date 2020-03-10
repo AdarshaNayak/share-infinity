@@ -151,7 +151,14 @@ app.get("/api/v1/task/fileIdentifier/:type/:transactionId",(req,res,next) => {
 		.catch(error => next(error));
 });
 
-
+app.get("/api/v1/polling/taskRequired/:userId",(req,res,next) => {
+	taskService.getTaskAllocatedStatus(req.params.userId)
+		.then(response => {
+			console.log(response);
+			res.send(response);
+		})
+		.catch(error => next(error));
+});
 
 // NOTE: the below middleware has to be applied after calling the api so do not move it
 // global error handler
