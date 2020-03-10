@@ -10,7 +10,7 @@ let timeoutObj = null;
 const { exec } = require('child_process');
 
 const createDockerFile = require("./createDockerFile");
-const ipfsHelper = require("./_helpers/cmdHelper");
+const cmdHelper = require("./_helpers/cmdHelper");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -31,7 +31,7 @@ app.post("/api/v1/local/dockerconfig", async (req, res) => {
 
 app.post("/api/v1/local/addFile",(req,res) => {
 	const { filePath} = req.body;
-	ipfsHelper.ipfsAdd(filePath)
+	cmdHelper.ipfsAdd(filePath)
 		.then((response => {
 			res.send({
 				"fileIdentifier" : response
@@ -41,7 +41,7 @@ app.post("/api/v1/local/addFile",(req,res) => {
 });
 
 app.get("/api/v1/local/file/:hash",(req,res) => {
-	ipfsHelper.ipfsGet(req.params.hash)
+	cmdHelper.ipfsGet(req.params.hash)
 		.then(response => {
 			res.send(response);
 		})
@@ -61,13 +61,17 @@ app.get("/api/v1/local/polling/provider/:userId/:option",(req,res) => {
 						axios.get(vmIp+"/api/v1/task/fileIdentifier/provider/"+transactionId)
 							.then(response => {
 
-								ipfsHelper.execShellCommand("mkdir "+transactionId)
+								cmdHelper.execShellCommand("mkdir "+transactionId)
 									.then(() => {
-										ipfsHelper.execShellCommand("pwd")
+										cmdHelper.execShellCommand("pwd")
 											.then((path) => {
-												console.log("path",path.slice(0,-1)+"adu");
-												ipfsHelper.ipfsGet(response.data["dataFileIdentifier"],path.slice(0,-1)+"/"+transactionId+"/data.zip").then();
-												ipfsHelper.ipfsGet(response.data["dockerFileIdentifier"],path.slice(0,-1)+"/"+transactionId+"/dockerfile").then();
+												cmdHelper.ipfsGet(response.data["dataFileIdentifier"],path.slice(0,-1)+"/"+transactionId+"/data.zip").then(() => {
+													cmdHelper.ipfsGet(response.data["dockerFileIdentifier"],path.slice(0,-1)+"/"+transactionId+"/dockerfile").then(() =>{
+														cmdHelper.execShellCommand("docker build -t 'test:latest' ./"+transactionId).then(response => {
+															console.log(response);
+														})
+													});
+												});
 											})
 									})
 							})
