@@ -3,9 +3,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const axios = require("axios");
+const compressing = require("compressing");
 const app = express();
 const port = 3000;
-const vmIp = "http://localhost:8000";
+const vmIp = "http://3.83.184.170:8000";
 let timeoutObj = null;
 const { exec } = require('child_process');
 
@@ -66,15 +67,21 @@ app.get("/api/v1/local/polling/provider/:userId/:option",(req,res) => {
 										cmdHelper.execShellCommand("pwd")
 											.then((path) => {
 												cmdHelper.ipfsGet(response.data["dataFileIdentifier"],path.slice(0,-1)+"/"+transactionId+"/data.zip").then(() => {
-													cmdHelper.ipfsGet(response.data["dockerFileIdentifier"],path.slice(0,-1)+"/"+transactionId+"/dockerfile").then(() =>{
-														cmdHelper.execShellCommand("docker build -t 'test:latest' ./"+transactionId).then(response => {
-															console.log(response);
+													const dockerFileIdentifier = response.data["dockerFileIdentifier"];
+														compressing.tar.uncompress(path.slice(0,-1)+"/"+transactionId+"/data.zip",path.slice(0,-1)+"/"+transactionId).then(() =>{
+																cmdHelper.ipfsGet(dockerFileIdentifier,path.slice(0,-1)+"/"+transactionId+"/python-project/dockerfile").then(() =>{
+																	cmdHelper.execShellCommand("docker build -t 'task:latest' ./"+transactionId+"/python-project").then(response =>{
+																		console.log(response);
+																		cmdHelper.execShellCommand("docker run task:latest").then(response => {
+																			console.log(response);
+																		})
+																	})
+																})
 														})
-													});
-												});
-											})
-									})
-							})
+												})
+										})
+								})
+						})
 					}
 					else{
 					 timeoutObj = setTimeout(function () {
