@@ -31,16 +31,21 @@ function createDockerFile(transactionId, commandsToRun, filePath, vmIp) {
 			// add the shell script to the folder as well
 			//set the start time and then
 			var bashFileArr = [
-				"curl --request POST --url http://" +
+				"curl --request POST --url " +
 					vmIp +
 					'/api/v1/task/time --header \'content-type: application/json\'  --data \'{ "type": "startTime",  "transactionId": "' +
 					transactionId +
 					"\"}'",
 				"pip3 install -r requirements.txt",
 				commandsToRun,
-				"curl --request POST --url http://" +
+				"curl --request POST --url " +
 					vmIp +
 					'/api/v1/task/time --header \'content-type: application/json\'  --data \'{ "type": "endTime",  "transactionId": "' +
+					transactionId +
+					"\"}'",
+				"curl --request POST --url " +
+					vmIp +
+					'/api/v1/task/time --header \'content-type: application/json\'  --data \'{ "status": "completed",  "transactionId": "' +
 					transactionId +
 					"\"}'"
 			];
