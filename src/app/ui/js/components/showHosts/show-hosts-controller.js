@@ -13,7 +13,7 @@ export default class showHostsController {
 
 		this.getHosts();
 		this.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-		this.uderId = this.currentUser.userId;
+		this.userId = this.currentUser.userId;
 		console.log(this.providers);
 	}
 
@@ -34,7 +34,7 @@ export default class showHostsController {
 		const ctrl = this;
 		const myproviderId = providerId;
 		console.log(this.submittedProviders);
-		this.taskService.submitTask(ctrl.userId, providerId).then(
+		this.taskService.submitTask(this.userId, providerId).then(
 			function(response) {
 				// console.log(ctrl);
 				// console.log(ctrl.submittedProviders);
