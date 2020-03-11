@@ -225,9 +225,12 @@ async function getTaskAllocatedStatus(userId){
         }
     }
     else {
-        return {
+
+        const result =  {
             "transactionId" : status.transactionId
         }
+        await TaskAllocatedProviders.deleteOne({providerId:userId});
+        return result;
     }
 }
 
