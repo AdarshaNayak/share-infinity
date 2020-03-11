@@ -1,5 +1,6 @@
 const config  = require('../config/config');
 const db =  require('../_helpers/db');
+const cmdHelper = require('../_helpers/cmdHelpers');
 const User = db.User;
 const Provider = db.Provider;
 const SystemInfo = db.SystemInfo;
@@ -169,10 +170,22 @@ async function setFileIdentifier({transactionId,type,fileIdentifiers,fileKey}){
         task.dataFileIdentifier = fileIdentifiers.dataFileIdentifier;
         task.dockerFileIdentifier = fileIdentifiers.dockerFileIdentifier;
         task.dataFileKey = fileKey.dataFileKey;
+        cmdHelper.execShellCommand("ipfs get "+fileIdentifiers.dataFileIdentifier).then( (output) => {
+            console.log(output);
+            cmdHelper.execShellCommand("ipfs get " + fileIdentifiers.dockerFileIdentifier).then(output => {
+                console.log(output);
+            });
+        })
     }
     else{
         task.resultFileIdentifier = fileIdentifiers.resultFileIdentifier;
         task.resultFileKey = fileKey.resultFileKey;
+        cmdHelper.execShellCommand("ipfs get "+fileIdentifiers.resultFileIdentifier).then( (output) => {
+            console.log(output);
+            cmdHelper.execShellCommand("ipfs get " + fileKey.resultFileKey).then(output => {
+                console.log(output);
+            });
+        })
     }
     return task.save()
         .then(response => {
