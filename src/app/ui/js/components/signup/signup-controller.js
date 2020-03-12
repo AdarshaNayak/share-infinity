@@ -22,31 +22,40 @@ export default class signupController {
 		this.success = false;
 		console.log("hi");
 		const ctrl = this;
-		this.authService.register(this.userId, this.password).then(
-			function(response) {
-				ctrl.success = true;
-				ctrl.message = "Successfull! Redirecting to login..";
+		this.authService
+			.register(this.userId, this.password, this.emailId)
+			.then(
+				function(response) {
+					ctrl.success = true;
+					ctrl.message = "Successfull! Redirecting to login..";
 
-				ctrl.taskService.updateSystemInfo(ctrl.userId, 4, 8, 1024).then(
-					function(response) {
-						console.log("system info updated ... ", response);
-					},
-					function(error) {
-						console.log("system info failed to update .. " + error);
-					}
-				);
+					ctrl.taskService
+						.updateSystemInfo(ctrl.userId, 4, 8, 1024)
+						.then(
+							function(response) {
+								console.log(
+									"system info updated ... ",
+									response
+								);
+							},
+							function(error) {
+								console.log(
+									"system info failed to update .. " + error
+								);
+							}
+						);
 
-				ctrl.$timeout(function() {
-					ctrl.$location.path("/");
-				}, 500);
-			},
-			function(error) {
-				ctrl.error = true;
-				ctrl.message = error.data.message;
-				ctrl.userId = "";
-				ctrl.password = "";
-				ctrl.emailId = "";
-			}
-		);
+					ctrl.$timeout(function() {
+						ctrl.$location.path("/");
+					}, 500);
+				},
+				function(error) {
+					ctrl.error = true;
+					ctrl.message = error.data.message;
+					ctrl.userId = "";
+					ctrl.password = "";
+					ctrl.emailId = "";
+				}
+			);
 	}
 }
