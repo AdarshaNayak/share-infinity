@@ -54,6 +54,7 @@ app.get("/api/v1/local/polling/provider/:userId/:option",(req,res) => {
 	const userId = req.params.userId;
 
 	if(option == "start"){
+		axios.get(vmIp+"/api/v1/provider/"+userId+"/online").then();
 		console.log("polling started");
 			axios.get(vmIp+"/api/v1/polling/taskRequired/"+userId)
 				.then(response => {
@@ -95,6 +96,7 @@ app.get("/api/v1/local/polling/provider/:userId/:option",(req,res) => {
 	}
 	else if(option === "stop"){
 		console.log("polling stopped");
+		axios.get(vmIp+"/api/v1/provider/"+userId+"/offline").then();
 		clearTimeout(timeoutObj);
 	}
 	res.sendStatus(200);
