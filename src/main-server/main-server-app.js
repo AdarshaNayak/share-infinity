@@ -79,6 +79,22 @@ app.get("/api/v1/providers/:cpu/:ram/:storage", (req, res, next) => {
 		.catch(err => next(err));
 });
 
+app.get("api/v1/provider/:providerId/:state",async (req,res,next) => {
+	const provider = await db.Provider.findOne({providerId:req.params.providerId});
+	if(req.params.state == "online"){
+		provider.isOnline = true;
+		provider.providerInUse = false;
+		provider.isAssigned = false;
+	}
+	else{
+		provider.isOnline = false;
+		provider.providerInUse = false;
+		provider.isAssigned = false;
+	}
+	provider.save();
+	res.send({});
+});
+
 app.post("/api/v1/tasks", (req, res, next) => {
 	taskService
 		.createTask(req.body)
