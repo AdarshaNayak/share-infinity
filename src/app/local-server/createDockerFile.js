@@ -45,7 +45,7 @@ function createDockerFile(transactionId, commandsToRun, filePath, vmIp) {
 					"\"}'",
 				"curl --request POST --url " +
 					vmIp +
-					'/api/v1/task/time --header \'content-type: application/json\'  --data \'{ "status": "completed",  "transactionId": "' +
+					'/api/v1/task/status --header \'content-type: application/json\'  --data \'{ "status": "completed",  "transactionId": "' +
 					transactionId +
 					"\"}'"
 			];
