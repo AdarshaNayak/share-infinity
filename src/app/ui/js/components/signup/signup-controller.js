@@ -1,9 +1,9 @@
 export default class signupController {
 	static get $inject() {
-		return ["authService", "$location", "$timeout"];
+		return ["authService", "taskService", "$location", "$timeout"];
 	}
 
-	constructor(authService, $location, $timeout) {
+	constructor(authService, taskService, $location, $timeout) {
 		this.authService = authService;
 		this.$location = $location;
 		this.$timeout = $timeout;
@@ -14,6 +14,7 @@ export default class signupController {
 		this.message = "";
 		this.repassword = "";
 		this.emailId = "";
+		this.taskService = taskService;
 	}
 
 	register() {
@@ -25,6 +26,16 @@ export default class signupController {
 			function(response) {
 				ctrl.success = true;
 				ctrl.message = "Successfull! Redirecting to login..";
+
+				ctrl.taskService.updateSystemInfo(ctrl.userId, 4, 8, 1024).then(
+					function(response) {
+						console.log("system info updated ... ", response);
+					},
+					function(error) {
+						console.log("system info failed to update .. " + error);
+					}
+				);
+
 				ctrl.$timeout(function() {
 					ctrl.$location.path("/");
 				}, 500);

@@ -53,4 +53,13 @@ export default class taskService {
 				transactionId
 		);
 	}
+
+	updateSystemInfo(userId, cpuCores, ram, storage) {
+		return this.$http.post(this.ip + "/api/v1/sysinfo", {
+			userId: userId,
+			cpuCores: cpuCores,
+			ram: ram,
+			storage: storage
+		});
+	}
 }

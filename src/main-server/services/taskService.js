@@ -269,6 +269,11 @@ async function getTaskAllocatedStatus(userId) {
 	}
 }
 
+async function updateSystemInfo(sysInfoParam) {
+	const sysInfo = new SystemInfo(sysInfoParam);
+	await sysInfo.save();
+}
+
 module.exports = {
 	getProviders,
 	createTask,
@@ -280,5 +285,6 @@ module.exports = {
 	setTaskCost,
 	setFileIdentifier,
 	getFileIdentifier,
-	getTaskAllocatedStatus
+	getTaskAllocatedStatus,
+	updateSystemInfo
 };

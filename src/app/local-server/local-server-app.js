@@ -6,7 +6,7 @@ const axios = require("axios");
 const compressing = require("compressing");
 const app = express();
 const port = 3000;
-const vmIp = "http://3.83.184.170:8000";
+const vmIp = "http://localhost:8000";
 let timeoutObj = null;
 const { exec } = require("child_process");
 
