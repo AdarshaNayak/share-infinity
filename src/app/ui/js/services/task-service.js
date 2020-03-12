@@ -6,7 +6,7 @@ export default class taskService {
 	constructor($http, $timeout) {
 		this.$http = $http;
 		this.$timeout = $timeout;
-		this.ip = "http://localhost:8000";
+		this.ip = "http://18.206.255.239:8000";
 		this.localIp = "http://localhost:3000";
 	}
 
@@ -47,10 +47,16 @@ export default class taskService {
 	getResults(userId, transactionId) {
 		return this.$http.get(
 			this.localIp +
-				"/api/v1/local/results/" +
-				userId +
-				"/" +
-				transactionId
+			"/api/v1/local/results/" +
+			userId +
+			"/" +
+			transactionId
+		);
+	}
+
+	getRunningTasks(userId) {
+		return this.$http.get(
+			this.ip + "/api/v1/tasks/" + userId + "/provider"
 		);
 	}
 
