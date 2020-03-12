@@ -55,7 +55,6 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 	const option = req.params.option;
 	const userId = req.params.userId;
 
-<<<<<<< HEAD
 	if (option == "start") {
 		axios
 			.get(vmIp + "/api/v1/polling/taskRequired/" + userId)
@@ -87,29 +86,58 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 														"/data.zip"
 												)
 												.then(() => {
-													cmdHelper
-														.ipfsGet(
-															response.data[
-																"dockerFileIdentifier"
-															],
+													const dockerFileIdentifier =
+														response.data[
+															"dockerFileIdentifier"
+														];
+													compressing.tar
+														.uncompress(
 															path.slice(0, -1) +
 																"/" +
 																transactionId +
-																"/dockerfile"
+																"/data.zip",
+															path.slice(0, -1) +
+																"/" +
+																transactionId
 														)
 														.then(() => {
 															cmdHelper
-																.execShellCommand(
-																	"docker build -t 'test:latest' ./" +
-																		transactionId
+																.ipfsGet(
+																	dockerFileIdentifier,
+																	path.slice(
+																		0,
+																		-1
+																	) +
+																		"/" +
+																		transactionId +
+																		"/python-project/dockerfile"
 																)
-																.then(
-																	response => {
-																		console.log(
-																			response
+																.then(() => {
+																	cmdHelper
+																		.execShellCommand(
+																			"docker build -t 'task:latest' ./" +
+																				transactionId +
+																				"/python-project"
+																		)
+																		.then(
+																			response => {
+																				console.log(
+																					response
+																				);
+																				cmdHelper
+																					.execShellCommand(
+																						"docker run task:latest"
+																					)
+																					.then(
+																						response => {
+																							console.log(
+																								response
+																							);
+																						}
+																					);
+																			}
 																		);
-																	}
-																);
+																});
 														});
 												});
 										});
@@ -128,46 +156,6 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 				}
 			});
 	} else if (option === "stop") {
-=======
-	if(option == "start"){
-			axios.get(vmIp+"/api/v1/polling/taskRequired/"+userId)
-				.then(response => {
-					const transactionId = response.data.transactionId;
-					console.log(transactionId);
-					if(transactionId !== null){
-						axios.get(vmIp+"/api/v1/task/fileIdentifier/provider/"+transactionId)
-							.then(response => {
-
-								cmdHelper.execShellCommand("mkdir "+transactionId)
-									.then(() => {
-										cmdHelper.execShellCommand("pwd")
-											.then((path) => {
-												cmdHelper.ipfsGet(response.data["dataFileIdentifier"],path.slice(0,-1)+"/"+transactionId+"/data.zip").then(() => {
-													const dockerFileIdentifier = response.data["dockerFileIdentifier"];
-														compressing.tar.uncompress(path.slice(0,-1)+"/"+transactionId+"/data.zip",path.slice(0,-1)+"/"+transactionId).then(() =>{
-																cmdHelper.ipfsGet(dockerFileIdentifier,path.slice(0,-1)+"/"+transactionId+"/python-project/dockerfile").then(() =>{
-																	cmdHelper.execShellCommand("docker build -t 'task:latest' ./"+transactionId+"/python-project").then(response =>{
-																		console.log(response);
-																		cmdHelper.execShellCommand("docker run task:latest").then(response => {
-																			console.log(response);
-																		})
-																	})
-																})
-														})
-												})
-										})
-								})
-						})
-					}
-					else{
-					 timeoutObj = setTimeout(function () {
-							http.get("localhost:"+port+"/api/v1/local/polling/provider/"+userId+"start");
-						},5000);
-					}
-				})
-	}
-	else if(option === "stop"){
->>>>>>> origin/master
 		clearTimeout(timeoutObj);
 	}
 	res.sendStatus(200);
