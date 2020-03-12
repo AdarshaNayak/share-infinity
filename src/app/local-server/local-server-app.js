@@ -6,7 +6,8 @@ const axios = require("axios");
 const compressing = require("compressing");
 const app = express();
 const port = 3000;
-const vmIp = "http://3.83.184.170:8000";
+const vmIp = "http://18.206.255.239:8000";
+// const vmIp = "http://127.0.0.1:8000";
 let timeoutObj = null;
 const { exec } = require("child_process");
 
@@ -52,9 +53,11 @@ app.get("/api/v1/local/file/:hash",(req,res) => {
 app.get("/api/v1/local/polling/provider/:userId/:option",(req,res) => {
 	const option = req.params.option;
 	const userId = req.params.userId;
+	console.log(option,userId);
 
 	if(option == "start"){
-		axios.get(vmIp+"/api/v1/provider/"+userId+"/online").then();
+		console.log(vmIp+"/api/v1/providers/"+userId+"/online");
+		axios.get(vmIp+"/api/v1/providers/"+userId+"/online").then((res) => console.log(res.data)).catch(err => console.log("hey"));
 		console.log("polling started");
 			axios.get(vmIp+"/api/v1/polling/taskRequired/"+userId)
 				.then(response => {
@@ -84,11 +87,12 @@ app.get("/api/v1/local/polling/provider/:userId/:option",(req,res) => {
 										})
 								})
 						})
+							.catch(err => console.log(err));
 					}
 					else{
 						console.log("calling");
 					 timeoutObj = setTimeout(function () {
-							http.get("localhost:"+port+"/api/v1/local/polling/provider/"+userId+"/start");
+							axios.get("http://127.0.0.1:"+port+"/api/v1/local/polling/provider/"+userId+"/start").then().catch();
 						},5000);
 					}
 				})
@@ -96,7 +100,7 @@ app.get("/api/v1/local/polling/provider/:userId/:option",(req,res) => {
 	}
 	else if(option === "stop"){
 		console.log("polling stopped");
-		axios.get(vmIp+"/api/v1/provider/"+userId+"/offline").then();
+		axios.get(vmIp+"/api/v1/providers/"+userId+"/offline").then().catch(err => console.log("error while setting offline"));
 		clearTimeout(timeoutObj);
 	}
 	res.sendStatus(200);
