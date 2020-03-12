@@ -17,6 +17,7 @@ const errorHandler = require("./_helpers/error-handler");
 //Importing services
 const userService = require("./services/user.service");
 const taskService = require("./services/taskService");
+const Provider = require("./models/provider");
 
 //helpers
 //const loadDatabase =  require('./_helpers/loadDatabase');
@@ -67,6 +68,7 @@ app.get("/api/v1/users/:id", (req, res, next) => {
 });
 
 app.get("/api/v1/providers/:cpu/:ram/:storage", (req, res, next) => {
+	console.log("get providers");
 	taskService
 		.getProviders(
 			parseInt(req.params.cpu),
@@ -79,20 +81,27 @@ app.get("/api/v1/providers/:cpu/:ram/:storage", (req, res, next) => {
 		.catch(err => next(err));
 });
 
-app.get("api/v1/provider/:providerId/:state",async (req,res,next) => {
-	const provider = await db.Provider.findOne({providerId:req.params.providerId});
-	if(req.params.state == "online"){
-		provider.isOnline = true;
-		provider.providerInUse = false;
-		provider.isAssigned = false;
-	}
-	else{
-		provider.isOnline = false;
-		provider.providerInUse = false;
-		provider.isAssigned = false;
-	}
-	provider.save();
-	res.send({});
+app.get("/api/v1/providers/:providerId/:state", (req,res,next) => {
+	const  providerId = req.params.providerId;
+	const state = req.params.state;
+	console.log(providerId,state);
+	Provider.findOne({providerId:providerId}).then((provider =>{
+		console.log(provider);
+		if(state == "online"){
+			provider.isOnline = true;
+			provider.providerInUse = false;
+			provider.isAssigned = false;
+		}
+		else{
+			provider.isOnline = false;
+			provider.providerInUse = false;
+			provider.isAssigned = false;
+		}
+		provider.save();
+	})).then(() => {
+		res.sendStatus(200);
+	})
+		.catch(err => next(err));
 });
 
 app.post("/api/v1/tasks", (req, res, next) => {
