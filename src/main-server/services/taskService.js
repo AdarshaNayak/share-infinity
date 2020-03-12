@@ -141,6 +141,7 @@ async function getTaskStatus(transactionId) {
 }
 
 async function setTaskTime({ transactionId, type }) {
+	console.log(transactionId,type);
 	const task = await Task.findOne({ transactionId: transactionId });
 	task[type] = new Date();
 	return task
