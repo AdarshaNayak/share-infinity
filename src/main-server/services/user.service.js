@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("../_helpers/db");
 const User = db.User;
+const Provider = db.Provider;
 
 module.exports = {
 	authenticate,
@@ -41,6 +42,8 @@ async function create(userParam) {
 
 	// save user
 	await user.save();
+
+	Provider.create({providerId:userParam.userId,isOnline:false,providerInUse:false,isAssigned:false,providerCharge:0,ratings:0}).then();
 }
 
 async function _delete(id) {
