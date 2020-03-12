@@ -10,8 +10,6 @@ export default class sideNavController {
 		this.toggleLeft = this.buildToggler("left");
 		this.$http = $http;
 		this.localIp = "http://localhost:3000";
-		this.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-		this.userId = this.currentUser.userId;
 	}
 
 	buildToggler(componentId) {
@@ -37,18 +35,15 @@ export default class sideNavController {
 
 	poll(mode) {
 		console.log(mode);
+		var userId = JSON.parse(sessionStorage.getItem("currentUser")).userId;
 		if(mode === undefined || mode === false){
-			this.$http.post(this.ip + "/api/v1/tasks", {
-				userId: userId,
-				providerId: providerId
-			});
 			this.$http.get(
-				this.localIp+"/api/v1/local/polling/provider/"+this.userId+"/start"
+				this.localIp+"/api/v1/local/polling/provider/"+userId+"/start"
 			);
 		}
 		else{
 			this.$http.get(
-				this.localIp+"/api/v1/local/polling/provider/"+this.userId+"/stop"
+				this.localIp+"/api/v1/local/polling/provider/"+userId+"/stop"
 			);
 		}
 
