@@ -254,6 +254,7 @@ async function getFileIdentifier(transactionId, type) {
 	}
 }
 
+<<<<<<< HEAD
 async function getTaskAllocatedStatus(userId) {
 	const status = await TaskAllocatedProviders.findOne({ providerId: userId });
 	if (status === null) {
@@ -265,6 +266,23 @@ async function getTaskAllocatedStatus(userId) {
 			transactionId: status.transactionId
 		};
 	}
+=======
+async function getTaskAllocatedStatus(userId){
+    const status = await TaskAllocatedProviders.findOne({providerId:userId});
+    if(status === null){
+        return {
+            "transactionId" : null
+        }
+    }
+    else {
+
+        const result =  {
+            "transactionId" : status.transactionId
+        }
+        await TaskAllocatedProviders.deleteOne({providerId:userId});
+        return result;
+    }
+>>>>>>> origin/master
 }
 
 module.exports = {
