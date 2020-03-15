@@ -37,7 +37,6 @@ function createDockerFile(transactionId, commandsToRun, filePath, vmIp) {
 					'/api/v1/task/time --header \'content-type: application/json\'  --data \'{ "type": "startTime",  "transactionId": "' +
 					transactionId +
 					"\"}'",
-				"pip3 install -r requirements.txt",
 				commandsToRun,
 				"curl --request POST --url " +
 					vmIp +
