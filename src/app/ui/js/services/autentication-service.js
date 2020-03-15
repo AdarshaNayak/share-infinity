@@ -6,7 +6,7 @@ export default class authService {
 	constructor($http, $timeout) {
 		this.$http = $http;
 		this.$timeout = $timeout;
-		this.ip = "http://18.206.255.239:8000";
+		this.ip = "http://localhost:8000";
 	}
 
 	register(userId, password, emailId) {

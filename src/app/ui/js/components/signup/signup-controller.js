@@ -29,21 +29,16 @@ export default class signupController {
 					ctrl.success = true;
 					ctrl.message = "Successfull! Redirecting to login..";
 
-					ctrl.taskService
-						.updateSystemInfo(ctrl.userId, 4, 8, 1024)
-						.then(
-							function(response) {
-								console.log(
-									"system info updated ... ",
-									response
-								);
-							},
-							function(error) {
-								console.log(
-									"system info failed to update .. " + error
-								);
-							}
-						);
+					ctrl.taskService.updateSystemInfo(ctrl.userId).then(
+						function(response) {
+							console.log("system info updated ... ", response);
+						},
+						function(error) {
+							console.log(
+								"system info failed to update .. " + error
+							);
+						}
+					);
 
 					ctrl.$timeout(function() {
 						ctrl.$location.path("/");
