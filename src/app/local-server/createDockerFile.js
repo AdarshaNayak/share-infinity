@@ -31,6 +31,7 @@ function createDockerFile(transactionId, commandsToRun, filePath, vmIp) {
 			// add the shell script to the folder as well
 			//set the start time and then
 			var bashFileArr = [
+				"#!/bin/bash",
 				"curl --request POST --url " +
 					vmIp +
 					'/api/v1/task/time --header \'content-type: application/json\'  --data \'{ "type": "startTime",  "transactionId": "' +
@@ -65,14 +66,12 @@ function createDockerFile(transactionId, commandsToRun, filePath, vmIp) {
 					//create the docker file
 
 					var dockerFileArr = [
-						"FROM alpine:3.7",
-						"RUN apk add build-base",
-						"RUN apk add --no-cache python3",
-						"RUN pip3 install --upgrade pip",
-						"RUN apk add --no-cache curl",
-						"RUN apk add --no-cache bash",
+						"FROM python:3.8-slim-buster",
 						"WORKDIR /task",
 						"COPY . /task",
+						"RUN apt-get update",
+						"RUN apt-get install -y curl",
+						"RUN pip install --no-cache-dir -r requirements.txt",
 						'ENTRYPOINT ["/bin/bash"]',
 						'CMD ["shellScript.sh"]'
 					];
