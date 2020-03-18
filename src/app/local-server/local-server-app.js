@@ -211,8 +211,6 @@ app.post("/api/v1/local/sysinfo", (req, res) => {
 			console.log("Before sending ...");
 			console.log(systemInfo);
 
-			res.send("Successfull");
-
 			axios
 				.post(vmIp + "/api/v1/sysinfo", systemInfo)
 				.then(function(response) {
