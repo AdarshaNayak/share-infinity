@@ -11,7 +11,7 @@ let timeoutObj = null;
 const { exec } = require("child_process");
 const physicalCpuCount = require("physical-cpu-count");
 const os = require("os");
-
+const process = require("process");
 const createDockerFile = require("./createDockerFile");
 const cmdHelper = require("./_helpers/cmdHelper");
 
@@ -187,10 +187,17 @@ app.post("/api/v1/local/sysinfo", (req, res) => {
 			console.log(error);
 			return error;
 		} else {
-			storage = stdout
-				.split("\n")[1]
-				.split(" ")[12]
-				.split("G")[0];
+			if (process.platform == "darwin") {
+				storage = stdout
+					.split("\n")[1]
+					.split(" ")[7]
+					.split("Gi")[0];
+			} else {
+				storage = stdout
+					.split("\n")[1]
+					.split(" ")[12]
+					.split("G")[0];
+			}
 
 			console.log(storage);
 
