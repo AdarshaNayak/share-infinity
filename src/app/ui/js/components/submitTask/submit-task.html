@@ -10,11 +10,11 @@
 			ng-submit="$ctrl.getProviders()"
 		>
 			<div class="form-group">
-				<label for="inputName">RAM</label>
+				<label for="inputName">Enter required RAM in GB</label>
 				<input
 					class="form-control"
 					id="RAM"
-					placeholder="Enter required RAM in GB"
+					placeholder=""
 					type="number"
 					aria-required="true"
 					min="1"
@@ -24,11 +24,13 @@
 			</div>
 
 			<div class="form-group">
-				<label for="inputName">CPU Cores</label>
+				<label for="inputName"
+					>CPU Cores : enter required no of CPU cores</label
+				>
 				<input
 					class="form-control"
 					id="cores"
-					placeholder="Enter required CPU cores"
+					placeholder=""
 					type="number"
 					min="1"
 					required
@@ -37,11 +39,13 @@
 			</div>
 
 			<div class="form-group">
-				<label for="inputName">Storage(ROM)</label>
+				<label for="inputName"
+					>Enter minimum required storage in GB</label
+				>
 				<input
 					class="form-control"
 					id="storage"
-					placeholder="Enter minimum required storage in GB"
+					placeholder=""
 					type="number"
 					min="1"
 					required
