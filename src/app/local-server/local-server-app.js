@@ -14,6 +14,8 @@ const os = require("os");
 const process = require("process");
 const createDockerFile = require("./createDockerFile");
 const cmdHelper = require("./_helpers/cmdHelper");
+const homedir = require("os").homedir;
+const dir = homedir + "/share-infinity-transactions/";
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -225,4 +227,22 @@ app.post("/api/v1/local/sysinfo", (req, res) => {
 	});
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.get("/api/v1//local/results/:userId/:transactionId", (req, res) => {
+	const transactionId = req.params.transactionId;
+	axios
+		.get(vmIp + "/api/v1/task/fileIdentifier/consumer/" + transactionId)
+		.then(response =>
+			cmdHelper
+				.ipfsGet(
+					response.data["resultFileIdentifier"],
+					dir + `${transactionId}.zip`
+				)
+				.then(res.sendStatus(200))
+				.catch(err => console.log(err))
+		)
+		.catch(err => console.log(err));
+});
+
+app.listen(port, () =>
+	console.log(`Local server app listening on port ${port}!`)
+);
