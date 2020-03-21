@@ -5,6 +5,7 @@ import ngMessages from "angular-messages";
 import ngAria from "angular-aria";
 import ngAnimate from "angular-animate";
 import ngMaterial from "angular-material";
+import jkAngularRatingStars from "angular-jk-rating-stars";
 
 import { loginComponent } from "./components/login";
 import { signupComponent } from "./components/signup";
@@ -14,7 +15,7 @@ import { sideNavComponent } from "./components/side-nav";
 import { providerComponent } from "./components/provider";
 import { showHostsComponent } from "./components/showHosts";
 import { submittedTasksComponent } from "./components/submitted-tasks";
-import { runningTasksComponent } from "./components/running-tasks"
+import { runningTasksComponent } from "./components/running-tasks";
 
 import authService from "./services/autentication-service";
 import taskService from "./services/task-service";
@@ -27,7 +28,8 @@ angular
 		ngMessages,
 		ngAria,
 		ngAnimate,
-		ngMaterial
+		ngMaterial,
+		jkAngularRatingStars
 	])
 
 	.component("loginComponent", loginComponent)
@@ -76,8 +78,7 @@ angular
 				access: { restricted: true }
 			})
 			.when("/running-tasks", {
-				template:
-					"<running-tasks-component></running-tasks-component>",
+				template: "<running-tasks-component></running-tasks-component>",
 				access: { restricted: true }
 			});
 

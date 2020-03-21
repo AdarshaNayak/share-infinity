@@ -1,15 +1,20 @@
 export default class sideNavController {
 	static get $inject() {
-		return ["$timeout", "$mdSidenav", "$log", "$location","$http"];
+		return ["$timeout", "$mdSidenav", "$log", "$location", "$http"];
 	}
 
-	constructor($timeout, $mdSidenav, $log, $location,$http) {
+	constructor($timeout, $mdSidenav, $log, $location, $http) {
 		this.$mdSidenav = $mdSidenav;
 		this.$log = $log;
 		this.$location = $location;
 		this.toggleLeft = this.buildToggler("left");
 		this.$http = $http;
 		this.localIp = "http://localhost:3000";
+		if (sessionStorage.currentUser) {
+			this.userId = JSON.parse(
+				sessionStorage.getItem("currentUser")
+			).userId;
+		} else this.userId = "";
 	}
 
 	buildToggler(componentId) {
@@ -36,16 +41,20 @@ export default class sideNavController {
 	poll(mode) {
 		console.log(mode);
 		var userId = JSON.parse(sessionStorage.getItem("currentUser")).userId;
-		if(mode === undefined || mode === false){
+		if (mode === undefined || mode === false) {
 			this.$http.get(
-				this.localIp+"/api/v1/local/polling/provider/"+userId+"/start"
+				this.localIp +
+					"/api/v1/local/polling/provider/" +
+					userId +
+					"/start"
+			);
+		} else {
+			this.$http.get(
+				this.localIp +
+					"/api/v1/local/polling/provider/" +
+					userId +
+					"/stop"
 			);
 		}
-		else{
-			this.$http.get(
-				this.localIp+"/api/v1/local/polling/provider/"+userId+"/stop"
-			);
-		}
-
 	}
 }

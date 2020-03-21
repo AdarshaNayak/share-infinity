@@ -1,13 +1,21 @@
 export default class submittedTasksController {
 	static get $inject() {
-		return ["authService", "taskService", "$location", "$timeout"];
+		return [
+			"authService",
+			"taskService",
+			"$location",
+			"$timeout",
+			"$mdDialog"
+		];
 	}
 
-	constructor(authService, taskService, $location, $timeout) {
+	constructor(authService, taskService, $location, $timeout, $mdDialog) {
 		this.authService = authService;
 		this.taskService = taskService;
 		this.$location = $location;
 		this.$timeout = $timeout;
+		this.$mdDialog = $mdDialog;
+		this.status = "";
 
 		this.error = false;
 		this.success = false;
@@ -16,6 +24,23 @@ export default class submittedTasksController {
 		this.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 		this.tasks = [];
 		this.getTasks();
+	}
+
+	showAlert(transactionId, providerId) {
+		const ctrl = this;
+		// Appending dialog to document.body to cover sidenav in docs app
+		// Modal dialogs should fully cover application
+		// to prevent interaction outside of dialog
+		this.$mdDialog.show(
+			ctrl.$mdDialog
+				.alert()
+				.parent(angular.element(document.body))
+				.clickOutsideToClose(true)
+				.title("Results Downloaded Successfully!")
+				.textContent(`Transaction ID : ${transactionId}`)
+				.ariaLabel("Alert success")
+				.ok("OK")
+		);
 	}
 
 	getTasks() {
@@ -31,26 +56,16 @@ export default class submittedTasksController {
 		);
 	}
 
-	getResults(transactionId) {
+	getResults(transactionId, providerId) {
 		const ctrl = this;
 		this.taskService
 			.getResults(this.currentUser.userId, transactionId)
 			.then(
 				function(response) {
-					ctrl.success = true;
-					ctrl.message = response.data.message;
-					ctrl.$timeout(function() {
-						ctrl.success = false;
-					}, 3000);
+					ctrl.showAlert(transactionId, providerId);
 				},
 
-				function(err) {
-					ctrl.error = true;
-					ctrl.message = err.data;
-					ctrl.$timeout(function() {
-						ctrl.error = false;
-					}, 3000);
-				}
+				function(err) {}
 			);
 	}
 }

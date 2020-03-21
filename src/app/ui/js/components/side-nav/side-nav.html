@@ -9,7 +9,8 @@
 			<div layout="column" class="md-toolbar-tools-bottom inset">
 				<user-avatar></user-avatar>
 				<span></span>
-				<!-- <div>Hi, UserId</div> -->
+				<br />
+				<div>Hi {{ $ctrl.userId }} !</div>
 			</div>
 		</md-toolbar>
 
@@ -46,7 +47,8 @@
 			</md-switch>
 
 			<md-item>
-				<md-button style="width: 90%; text-align: center;"
+				<md-button
+					style="width: 90%; text-align: center;"
 					ng-click="$ctrl.goToRunningTasks()"
 					>Running Tasks</md-button
 				>

@@ -34,9 +34,16 @@
 				</div>
 
 				<form
-					ng-submit="$ctrl.getResults(item.transactionId)"
+					ng-submit="$ctrl.getResults(item.transactionId,item.userId)"
 					ng-show="item.status == 'completed'"
 				>
+					<div class="card-body">
+						Rate your provider:
+						<jk-rating-stars
+							rating="$subCtrl.rating"
+						></jk-rating-stars>
+						<hr />
+					</div>
 					<input
 						type="submit"
 						class="btn btn-primary"

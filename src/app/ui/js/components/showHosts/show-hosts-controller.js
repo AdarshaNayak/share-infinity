@@ -1,20 +1,45 @@
 export default class showHostsController {
 	static get $inject() {
-		return ["authService", "taskService", "$location", "$timeout"];
+		return [
+			"authService",
+			"taskService",
+			"$location",
+			"$timeout",
+			"$mdDialog"
+		];
 	}
 
-	constructor(authService, taskService, $location, $timeout) {
+	constructor(authService, taskService, $location, $timeout, $mdDialog) {
 		this.authService = authService;
 		this.taskService = taskService;
 		this.$location = $location;
 		this.$timeout = $timeout;
+		this.$mdDialog = $mdDialog;
 		this.selection = [];
 		this.submittedProviders = [];
+		this.status = "0";
 
 		this.getHosts();
 		this.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 		this.userId = this.currentUser.userId;
 		console.log(this.providers);
+	}
+
+	showAlert(transactionId) {
+		const ctrl = this;
+		// Appending dialog to document.body to cover sidenav in docs app
+		// Modal dialogs should fully cover application
+		// to prevent interaction outside of dialog
+		this.$mdDialog.show(
+			ctrl.$mdDialog
+				.alert()
+				.parent(angular.element(document.body))
+				.clickOutsideToClose(true)
+				.title("Submitted Successfully!")
+				.textContent(`Transaction ID : ${transactionId}`)
+				.ariaLabel("Alert success")
+				.ok("OK")
+		);
 	}
 
 	toggleSelection(userId) {
@@ -41,10 +66,12 @@ export default class showHostsController {
 				ctrl.submittedProviders.push(myproviderId);
 
 				const transactionId = response.data.transactionId;
-				alert(
-					"Task submitted successfully with transactionId : " +
-						transactionId
-				);
+				// alert(
+				// 	"Task submitted successfully with transactionId : " +
+				// 		transactionId
+				// );
+
+				ctrl.showAlert(transactionId);
 
 				const filePath = document.getElementById(
 					"filepath_" + myproviderId
