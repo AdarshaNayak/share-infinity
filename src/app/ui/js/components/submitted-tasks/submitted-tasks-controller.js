@@ -10,13 +10,14 @@ export default class submittedTasksController {
 	}
 
 	constructor(authService, taskService, $location, $timeout, $mdDialog) {
+		const LIMIT = 100;
 		this.authService = authService;
 		this.taskService = taskService;
 		this.$location = $location;
 		this.$timeout = $timeout;
 		this.$mdDialog = $mdDialog;
-		this.rating = new Array(100).fill(0);
-		this.downloading = new Array(100).fill(false);
+		this.rating = new Array(LIMIT).fill(0);
+		this.downloading = new Array(LIMIT).fill(false);
 
 		this.error = false;
 		this.success = false;
