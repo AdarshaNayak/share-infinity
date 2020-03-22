@@ -65,4 +65,11 @@ export default class taskService {
 			userId: userId
 		});
 	}
+
+	submitRating(transactionId, rating) {
+		return this.$http.post(this.ip + "/api/v1/rating", {
+			transactionId: transactionId,
+			rating: rating
+		});
+	}
 }

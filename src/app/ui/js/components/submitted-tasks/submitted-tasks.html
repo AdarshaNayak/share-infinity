@@ -33,24 +33,44 @@
 					<h5 class="card-title">Status : {{item.status}}</h5>
 				</div>
 
-				<form
-					ng-submit="$ctrl.getResults(item.transactionId,item.userId)"
-					ng-show="item.status == 'completed'"
-				>
+				<div ng-show="item.status == 'completed'">
+					<div ng-show="$ctrl.downloading[$index]">
+						<md-progress-linear
+							style="color: blue;background-color: blue;"
+							md-mode="indeterminate"
+						></md-progress-linear>
+						<br />
+					</div>
+					<form
+						ng-submit="$ctrl.getResults(item.transactionId,$index)"
+					>
+						<input
+							type="submit"
+							class="btn btn-primary"
+							value="Get results"
+							style="position: relative; left: 10px;"
+						/>
+					</form>
+
 					<div class="card-body">
-						Rate your provider:
+						<hr />
+						<h5 class="card-title">
+							Rate your provider for this transaction:
+						</h5>
 						<jk-rating-stars
-							rating="$subCtrl.rating"
+							rating="$ctrl.rating[$index]"
 						></jk-rating-stars>
+						<br />
+						<button
+							class="btn btn-primary"
+							style="position: relative; left: -10px;"
+							ng-click="$ctrl.submitRating(item.transactionId,$index)"
+						>
+							Submit
+						</button>
 						<hr />
 					</div>
-					<input
-						type="submit"
-						class="btn btn-primary"
-						value="Get results"
-						style="position: relative; left: 10px;"
-					/>
-				</form>
+				</div>
 
 				<br />
 			</div>
