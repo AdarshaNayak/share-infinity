@@ -81,26 +81,27 @@ app.get("/api/v1/providers/:cpu/:ram/:storage", (req, res, next) => {
 		.catch(err => next(err));
 });
 
-app.get("/api/v1/providers/:providerId/:state", (req,res,next) => {
-	const  providerId = req.params.providerId;
+app.get("/api/v1/providers/:providerId/:state", (req, res, next) => {
+	const providerId = req.params.providerId;
 	const state = req.params.state;
-	console.log(providerId,state);
-	Provider.findOne({providerId:providerId}).then((provider =>{
-		console.log(provider);
-		if(state == "online"){
-			provider.isOnline = true;
-			provider.providerInUse = false;
-			provider.isAssigned = false;
-		}
-		else{
-			provider.isOnline = false;
-			provider.providerInUse = false;
-			provider.isAssigned = false;
-		}
-		provider.save();
-	})).then(() => {
-		res.sendStatus(200);
-	})
+	console.log(providerId, state);
+	Provider.findOne({ providerId: providerId })
+		.then(provider => {
+			console.log(provider);
+			if (state == "online") {
+				provider.isOnline = true;
+				provider.providerInUse = false;
+				provider.isAssigned = false;
+			} else {
+				provider.isOnline = false;
+				provider.providerInUse = false;
+				provider.isAssigned = false;
+			}
+			provider.save();
+		})
+		.then(() => {
+			res.sendStatus(200);
+		})
 		.catch(err => next(err));
 });
 
@@ -205,6 +206,13 @@ app.post("/api/v1/sysinfo", (req, res, next) => {
 	taskService
 		.updateSystemInfo(req.body)
 		.then(() => res.json({ message: "success" }))
+		.catch(err => next(err));
+});
+
+app.post("/api/v1/rating", (req, res, next) => {
+	taskService
+		.updateRating(req.body)
+		.then(() => res.json({ message: "rating updated successfully" }))
 		.catch(err => next(err));
 });
 

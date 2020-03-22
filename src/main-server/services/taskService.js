@@ -55,14 +55,17 @@ async function createTask({ userId, providerId }) {
 				transactionId: response.transactionId,
 				providerId: providerId
 			});
-			await db.Provider.findOne({providerId: providerId})
-				.then(provider => {
-					if(provider === null){
-						return {"message":"no provider with given provider id"};
+			await db.Provider.findOne({ providerId: providerId }).then(
+				provider => {
+					if (provider === null) {
+						return {
+							message: "no provider with given provider id"
+						};
 					}
 					provider.isAssigned = true;
 					provider.save();
-				});
+				}
+			);
 			await TaskFiles.create({
 				transactionId: response.transactionId
 			});
@@ -114,8 +117,8 @@ async function getTasks(userId, type) {
 async function updateTaskStatus({ transactionId, status }) {
 	const task = await Task.findOne({ transactionId: transactionId });
 	console.log(task);
-	if(task === null){
-		return  {"message":"task not found"};
+	if (task === null) {
+		return { message: "task not found" };
 	}
 	task.isCompleted = true;
 	task.save()
@@ -131,13 +134,13 @@ async function updateTaskStatus({ transactionId, status }) {
 			});
 		})
 		.catch(err => err);
-	return { "message": "updated Successfully" };
+	return { message: "updated Successfully" };
 }
 
 async function getTaskStatus(transactionId) {
 	const task = await Task.findOne({ transactionId: transactionId });
-	if(task === null){
-		return {"message" : "task not found"};
+	if (task === null) {
+		return { message: "task not found" };
 	}
 	if (task.isCompleted === true) {
 		return CompletedTasks.findOne({ transactionId: transactionId })
@@ -149,16 +152,16 @@ async function getTaskStatus(transactionId) {
 			.catch(err => err);
 	} else {
 		return {
-			"status": "running"
+			status: "running"
 		};
 	}
 }
 
 async function setTaskTime({ transactionId, type }) {
-	console.log(transactionId,type);
+	console.log(transactionId, type);
 	const task = await Task.findOne({ transactionId: transactionId });
-	if(task === null){
-		return {"message" : "task not found"};
+	if (task === null) {
+		return { message: "task not found" };
 	}
 	task[type] = new Date();
 	return task
@@ -174,8 +177,8 @@ async function setTaskTime({ transactionId, type }) {
 async function getTaskTime(transactionId) {
 	return Task.findOne({ transactionId: transactionId })
 		.then(task => {
-			if(task === null){
-				return {"message" : "task not found"};
+			if (task === null) {
+				return { message: "task not found" };
 			}
 			return {
 				providerId: task.providerId,
@@ -190,8 +193,8 @@ async function setTaskCost({ transactionId, cost }) {
 	const completedTask = await CompletedTasks.findOne({
 		transactionId: transactionId
 	});
-	if(completedTask === null){
-		return {"message" : "task not found"};
+	if (completedTask === null) {
+		return { message: "task not found" };
 	}
 	completedTask.cost = cost;
 	console.log(completedTask);
@@ -262,7 +265,7 @@ async function setFileIdentifier({
 async function getFileIdentifier(transactionId, type) {
 	const taskFile = await TaskFiles.findOne({ transactionId: transactionId });
 	if (taskFile === null) {
-		return {"message" :"task file not found"};
+		return { message: "task file not found" };
 	}
 	if (type === "consumer") {
 		return {
@@ -298,6 +301,14 @@ async function updateSystemInfo(sysInfoParam) {
 	await sysInfo.save();
 }
 
+async function updateRatings(ratingsParam) {
+	const completedTask = await CompletedTasks.findOne({
+		transactionId: ratingsParam.transactionId
+	});
+	completedTask.rating = ratingsParam.rating;
+	await completedTask.save();
+}
+
 module.exports = {
 	getProviders,
 	createTask,
@@ -310,5 +321,6 @@ module.exports = {
 	setFileIdentifier,
 	getFileIdentifier,
 	getTaskAllocatedStatus,
-	updateSystemInfo
+	updateSystemInfo,
+	updateRatings
 };
