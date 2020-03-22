@@ -67,83 +67,29 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 			.then(res => console.log(res.data))
 			.catch(err => console.log("hey"));
 		console.log("polling started");
-		axios
-			.get(vmIp + "/api/v1/polling/taskRequired/" + userId)
-			.then(response => {
+		axios.get(vmIp + "/api/v1/polling/taskRequired/" + userId).then(response => {
 				const transactionId = response.data.transactionId;
 				console.log(transactionId);
 				if (transactionId !== null) {
-					axios
-						.get(
-							vmIp +
-								"/api/v1/task/fileIdentifier/provider/" +
-								transactionId
-						)
+					axios.get(vmIp + "/api/v1/task/fileIdentifier/provider/" + transactionId)
 						.then(response => {
-							cmdHelper
-								.execShellCommand("mkdir " + transactionId)
+							cmdHelper.execShellCommand("mkdir " + transactionId)
 								.then(() => {
-									cmdHelper
-										.execShellCommand("pwd")
+									cmdHelper.execShellCommand("pwd")
 										.then(path => {
-											cmdHelper
-												.ipfsGet(
-													response.data[
-														"dataFileIdentifier"
-													],
-													path.slice(0, -1) +
-														"/" +
-														transactionId +
-														"/data.zip"
-												)
+											cmdHelper.ipfsGet(response.data["dataFileIdentifier"], path.slice(0, -1) + "/" + transactionId + "/data.zip")
 												.then(() => {
-													const dockerFileIdentifier =
-														response.data[
-															"dockerFileIdentifier"
-														];
-													compressing.tar
-														.uncompress(
-															path.slice(0, -1) +
-																"/" +
-																transactionId +
-																"/data.zip",
-															path.slice(0, -1) +
-																"/" +
-																transactionId
-														)
+													const dockerFileIdentifier = response.data["dockerFileIdentifier"];
+													compressing.tar.uncompress(path.slice(0, -1) + "/" + transactionId + "/data.zip", path.slice(0, -1) + "/" + transactionId)
 														.then(() => {
-															cmdHelper
-																.ipfsGet(
-																	dockerFileIdentifier,
-																	path.slice(
-																		0,
-																		-1
-																	) +
-																		"/" +
-																		transactionId +
-																		"/python-project/dockerfile"
-																)
+															cmdHelper.ipfsGet(dockerFileIdentifier, path.slice(0, -1) + "/" + transactionId + "/python-project/dockerfile")
 																.then(() => {
-																	cmdHelper
-																		.execShellCommand(
-																			"docker build -t 'task:latest' ./" +
-																				transactionId +
-																				"/python-project"
-																		)
-																		.then(
-																			response => {
-																				console.log(
-																					response
-																				);
-																				cmdHelper
-																					.execShellCommand(
-																						"docker run task:latest"
-																					)
-																					.then(
-																						response => {
-																							console.log(
-																								response
-																							);
+																	cmdHelper.execShellCommand("docker build -t 'task:latest' ./" + transactionId + "/python-project")
+																		.then(response => {
+																				console.log(response);
+																				cmdHelper.execShellCommand("docker run task:latest")
+																					.then(response => {
+																							console.log(response);
 																						}
 																					);
 																			}
