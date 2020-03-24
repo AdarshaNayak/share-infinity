@@ -22,7 +22,7 @@ function createDockerFile(transactionId, commandsToRun, filePath, vmIp) {
 	}
 
 	//generate the requirements and shell script file and place it inside the data folder
-	var exec_command = "pipreqs --force " + filePath;
+	var exec_command = "pipreqs --force " + filePath.replace(/\s/g,"\\ ");
 	exec(exec_command, (error, stdout, stderr) => {
 		if (error) {
 			// error condition
