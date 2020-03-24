@@ -17,7 +17,7 @@ export default class showHostsController {
 		this.$mdDialog = $mdDialog;
 		this.selection = [];
 		this.submittedProviders = [];
-		this.status = "0";
+		this.status = false;
 
 		this.getHosts();
 		this.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));

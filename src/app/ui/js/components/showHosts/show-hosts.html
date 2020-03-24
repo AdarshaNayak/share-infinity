@@ -1,3 +1,27 @@
+<div class="alert alert-warning alert-dismissible" ng-hide="$ctrl.status">
+	<button
+		type="button"
+		class="close"
+		data-dismiss="alert"
+		ng-click="$ctrl.status = true"
+	>
+		&times;
+	</button>
+	<strong>Alert!</strong>
+
+	<br />
+	<strong>Currently only Linux / MacOS is supported</strong><br />1. Please
+	make sure the data you submit is non-sensitive
+
+	<br />
+	2. In case of python projects (ML/DL) dependencies are added automatically
+
+	<br />3. In case of other tasks please make sure to include commands to
+	install other dependencies if any
+
+	<br />4. Create a directory called <strong>results </strong> in your project
+	folder and redirect / ouptut all your requirements into that folder
+</div>
 <div class="card card-outline-dark">
 	<div class="card-header bg-dark text-white">
 		<h3 class="mb-0">Select hosts and submit task files</h3>
@@ -8,7 +32,6 @@
 				class="card"
 				ng-attr-id="{{item.providerId}}"
 				ng-hide="$ctrl.submittedProviders.indexOf(item.providerId)>-1 || $ctrl.userId == item.providerId"
-
 			>
 				<div flex-gt-sm="50"></div>
 				<h5 class="card-header">
@@ -18,13 +41,20 @@
 						aria-label="Checkbox 1"
 					>
 					</md-checkbox>
-					Provider ID : {{ item.providerId }}
+					Provider ID : {{ item.providerId }} (<span
+						class="fa fa-star checked"
+						style="color: orange;"
+					></span>
+					{{item.rating}} )
 				</h5>
 
 				<div class="card-body">
 					<h5 class="card-title">RAM : {{item.ram}} GB</h5>
 					<h5 class="card-title">CPU cores : {{item.cpu}}</h5>
 					<h5 class="card-title">Storage : {{item.storage}} GB</h5>
+					<h5 class="card-title">
+						Cost : {{item.charge}} credits/sec
+					</h5>
 
 					<form
 						ng-show="$ctrl.selection.indexOf(item.providerId)>-1"
