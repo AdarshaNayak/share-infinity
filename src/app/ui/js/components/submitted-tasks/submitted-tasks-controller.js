@@ -97,9 +97,7 @@ export default class submittedTasksController {
 		this.taskService.makePayment(transactionId, amount).then(
 			function(response) {
 				ctrl.showAlert(response.data.message, "");
-				ctrl.$timeout(function() {
-					location.reload();
-				}, 2000);
+				ctrl.getTasks();
 			},
 			function(err) {
 				ctrl.showAlert(err.data.message, "");
