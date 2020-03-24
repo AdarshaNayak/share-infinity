@@ -6,7 +6,7 @@ const axios = require("axios");
 const compressing = require("compressing");
 const app = express();
 const port = 3000;
-const vmIp = "http://127.0.0.1:8000";
+const vmIp = "http://localhost:8000";
 let timeoutObj = null;
 const { exec } = require("child_process");
 const physicalCpuCount = require("physical-cpu-count");
@@ -78,14 +78,20 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 							await cmdHelper.ipfsGet(response.data["dataFileIdentifier"], path.slice(0, -1) + "/" + transactionId + "/data.zip");
 							const dockerFileIdentifier = response.data["dockerFileIdentifier"];
 							await compressing.tar.uncompress(path.slice(0, -1) + "/" + transactionId + "/data.zip", path.slice(0, -1) + "/" + transactionId);
-							await cmdHelper.ipfsGet(dockerFileIdentifier, path.slice(0, -1) + "/" + transactionId + "/python-project/dockerfile");
-							let output = await cmdHelper.execShellCommand("docker build -t 'task:latest' ./" + transactionId + "/python-project");
+							let projectPath = await cmdHelper.execShellCommand("ls -d "+path.slice(0, -1).replace(/\s/g,"\\ ") + "/" + transactionId+"/*/")
+							projectPath = projectPath.split("/");
+							const projectName = projectPath[projectPath.length-2];
+							await cmdHelper.ipfsGet(dockerFileIdentifier, path.slice(0, -1) + "/" + transactionId + "/"+projectName+"/dockerfile");
+							let output = await cmdHelper.execShellCommand("docker build -t 'task:latest' ./" + transactionId + "/"+projectName);
 							console.log(output);
 							output = await cmdHelper.execShellCommand("docker run task:latest");
 							console.log(output);
 							await cmdHelper.execShellCommand("docker create -ti --name temp task:latest bash");
 							await cmdHelper.execShellCommand("docker cp temp:/task/results ./dockerResults");
-							const resultFileIdentifier  = await cmdHelper.ipfsAdd("./dockerResults");
+							await cmdHelper.execShellCommand("docker rm -f temp");
+							await compressing.tar.compressDir("./dockerResults","./results.zip");
+
+							const resultFileIdentifier  = await cmdHelper.ipfsAdd("./results.zip");
 							const postBody = {
 								transactionId:transactionId,
 								type:"provider",
