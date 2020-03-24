@@ -38,6 +38,11 @@ export default class sideNavController {
 		this.toggleLeft();
 	}
 
+	goToWallet() {
+		this.$location.path("/wallet");
+		this.toggleLeft();
+	}
+
 	poll(mode) {
 		console.log(mode);
 		var userId = JSON.parse(sessionStorage.getItem("currentUser")).userId;

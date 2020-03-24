@@ -16,6 +16,7 @@ import { providerComponent } from "./components/provider";
 import { showHostsComponent } from "./components/showHosts";
 import { submittedTasksComponent } from "./components/submitted-tasks";
 import { runningTasksComponent } from "./components/running-tasks";
+import { walletComponent } from "./components/wallet";
 
 import authService from "./services/autentication-service";
 import taskService from "./services/task-service";
@@ -41,6 +42,7 @@ angular
 	.component("showHostsComponent", showHostsComponent)
 	.component("submittedTasksComponent", submittedTasksComponent)
 	.component("runningTasksComponent", runningTasksComponent)
+	.component("walletComponent", walletComponent)
 
 	.service("authService", authService)
 	.service("taskService", taskService)
@@ -79,6 +81,10 @@ angular
 			})
 			.when("/running-tasks", {
 				template: "<running-tasks-component></running-tasks-component>",
+				access: { restricted: true }
+			})
+			.when("/wallet", {
+				template: "<wallet-component></wallet-component>",
 				access: { restricted: true }
 			});
 

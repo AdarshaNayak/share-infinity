@@ -1,0 +1,32 @@
+<div class="card card-outline-dark">
+	<div class="card-header bg-dark text-white">
+		<h3 class="mb-0">Wallet</h3>
+	</div>
+
+	<div class="card-body" style="text-align: center;">
+		<h5 class="card-title">
+			User ID : {{ $ctrl.userId}}
+		</h5>
+		<h5 class="card-title">
+			Current Balance : <strong>{{ $ctrl.balance}} credits</strong>
+		</h5>
+		<hr />
+		<form ng-submit="$ctrl.updateBalance($ctrl.amount)">
+			<div class="form-group col-auto">
+				<label for="amount">Recharge amount </label>
+				<input
+					type="number"
+					class="form-control mb-2"
+					id="amount"
+					placeholder="Enter amount"
+					style="text-align: center;"
+					required
+					min="1"
+					ng-model="$ctrl.amount"
+				/>
+			</div>
+			<br />
+			<input type="submit" class="btn btn-primary" value="Recharge" />
+		</form>
+	</div>
+</div>

@@ -78,7 +78,7 @@ export default class taskService {
 	}
 
 	updateBalance(userId, amount) {
-		return this.$http.post(this.ip + "/api/v1/balance", {
+		return this.$http.put(this.ip + "/api/v1/balance", {
 			userId: userId,
 			amount: amount
 		});
