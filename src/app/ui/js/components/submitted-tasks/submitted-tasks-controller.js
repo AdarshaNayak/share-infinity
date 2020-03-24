@@ -28,7 +28,7 @@ export default class submittedTasksController {
 		this.getTasks();
 	}
 
-	showAlert(msg, transactionId) {
+	showAlert(msg, text) {
 		const ctrl = this;
 		// Appending dialog to document.body to cover sidenav in docs app
 		// Modal dialogs should fully cover application
@@ -39,9 +39,7 @@ export default class submittedTasksController {
 				.parent(angular.element(document.body))
 				.clickOutsideToClose(true)
 				.title(msg)
-				.textContent(
-					`Please find the file ${transactionId}.zip in the folder share-infinity-transactions in your home directory`
-				)
+				.textContent(text)
 				.ariaLabel("Alert success")
 				.ok("OK")
 		);
@@ -69,7 +67,7 @@ export default class submittedTasksController {
 				function(response) {
 					ctrl.showAlert(
 						"Results Downloaded Successfully!",
-						transactionId
+						`Please find the file ${transactionId}.zip in the folder share-infinity-transactions in your home directory`
 					);
 					ctrl.downloading[index] = false;
 				},
@@ -85,10 +83,23 @@ export default class submittedTasksController {
 
 		this.taskService.submitRating(transactionId, this.rating[index]).then(
 			function(response) {
-				ctrl.showAlert("Ratings submitted successfully", transactionId);
+				ctrl.showAlert("Ratings submitted successfully", "");
 			},
 			function(err) {
 				console.log(err);
+			}
+		);
+	}
+
+	makePayment(transactionId, amount) {
+		const ctrl = this;
+
+		this.taskService.makePayment(transactionId, amount).then(
+			function(response) {
+				ctrl.showAlert(response.data.message, "");
+			},
+			function(err) {
+				ctrl.showAlert(err.data.message, "");
 			}
 		);
 	}

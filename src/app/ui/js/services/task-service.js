@@ -72,4 +72,22 @@ export default class taskService {
 			rating: rating
 		});
 	}
+
+	getBalance(userId) {
+		return this.$http.get(this.ip + "/api/v1/balance/" + userId);
+	}
+
+	updateBalance(userId, amount) {
+		return this.$http.post(this.ip + "/api/v1/balance", {
+			userId: userId,
+			amount: amount
+		});
+	}
+
+	makePayment(transactionId, amount) {
+		return this.$http.post(this.ip + "/api/v1/pay", {
+			transactionId: transactionId,
+			amount: amount
+		});
+	}
 }

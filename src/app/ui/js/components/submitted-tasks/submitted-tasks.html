@@ -1,8 +1,13 @@
-<div ng-show="$ctrl.error" class="alert alert-danger">
-	{{ $ctrl.message }}
-</div>
-<div ng-show="$ctrl.success" class="alert alert-success">
-	{{ $ctrl.message }}
+<div class="alert alert-warning alert-dismissible" ng-hide="$ctrl.status">
+	<button
+		type="button"
+		class="close"
+		data-dismiss="alert"
+		ng-click="$ctrl.status = true"
+	>
+		&times;
+	</button>
+	<strong>Alert! </strong>Please make the payment to download your results
 </div>
 <div class="card card-outline-dark">
 	<div class="card-header bg-dark text-white">
@@ -33,8 +38,10 @@
 					<h5 class="card-title">Status : {{item.status}}</h5>
 				</div>
 
-				<div ng-show="item.status == 'completed'">
-					<div ng-show="$ctrl.downloading[$index]">
+				<div
+					ng-show="item.status == 'completed' && item.isPaymentDone == true"
+				>
+					<div ng-show="$ctrl.downloading[$index] ">
 						<md-progress-linear
 							style="color: blue;background-color: blue;"
 							md-mode="indeterminate"
@@ -47,12 +54,12 @@
 						<input
 							type="submit"
 							class="btn btn-primary"
-							value="Get results"
+							value="Download Results"
 							style="position: relative; left: 10px;"
 						/>
 					</form>
 
-					<div class="card-body">
+					<div class="card-body" ng-show="item.isRated == false">
 						<hr />
 						<h5 class="card-title">
 							Rate your provider for this transaction:
@@ -71,8 +78,24 @@
 						<hr />
 					</div>
 				</div>
+				<hr />
+				<div
+					ng-show="item.status == 'completed' && item.isPaymentDone == false"
+				>
+					<div class="card-body">
+						<h5 class="card-title">
+							Amount to be paid : {{item.amount}} credits
+						</h5>
 
-				<br />
+						<button
+							class="btn btn-primary"
+							style="position: relative; left: -7px;"
+							ng-click="$ctrl.makePayment(item.transactionId,item.amount)"
+						>
+							Make Payment
+						</button>
+					</div>
+				</div>
 			</div>
 			<br />
 		</div>
