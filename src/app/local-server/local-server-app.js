@@ -72,34 +72,36 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 				console.log(transactionId);
 				if (transactionId !== null) {
 					axios.get(vmIp + "/api/v1/task/fileIdentifier/provider/" + transactionId)
-						.then(response => {
-							cmdHelper.execShellCommand("mkdir " + transactionId)
-								.then(() => {
-									cmdHelper.execShellCommand("pwd")
-										.then(path => {
-											cmdHelper.ipfsGet(response.data["dataFileIdentifier"], path.slice(0, -1) + "/" + transactionId + "/data.zip")
-												.then(() => {
-													const dockerFileIdentifier = response.data["dockerFileIdentifier"];
-													compressing.tar.uncompress(path.slice(0, -1) + "/" + transactionId + "/data.zip", path.slice(0, -1) + "/" + transactionId)
-														.then(() => {
-															cmdHelper.ipfsGet(dockerFileIdentifier, path.slice(0, -1) + "/" + transactionId + "/python-project/dockerfile")
-																.then(() => {
-																	cmdHelper.execShellCommand("docker build -t 'task:latest' ./" + transactionId + "/python-project")
-																		.then(response => {
-																				console.log(response);
-																				cmdHelper.execShellCommand("docker run task:latest")
-																					.then(response => {
-																							console.log(response);
-																						}
-																					);
-																			}
-																		);
-																});
-														});
-												});
-										});
-								});
-						})
+						.then(async response => {
+							await cmdHelper.execShellCommand("mkdir " + transactionId);
+							const path = await cmdHelper.execShellCommand("pwd");
+							await cmdHelper.ipfsGet(response.data["dataFileIdentifier"], path.slice(0, -1) + "/" + transactionId + "/data.zip");
+							const dockerFileIdentifier = response.data["dockerFileIdentifier"];
+							await compressing.tar.uncompress(path.slice(0, -1) + "/" + transactionId + "/data.zip", path.slice(0, -1) + "/" + transactionId);
+							await cmdHelper.ipfsGet(dockerFileIdentifier, path.slice(0, -1) + "/" + transactionId + "/python-project/dockerfile");
+							let output = await cmdHelper.execShellCommand("docker build -t 'task:latest' ./" + transactionId + "/python-project");
+							console.log(output);
+							output = await cmdHelper.execShellCommand("docker run task:latest");
+							console.log(output);
+							await cmdHelper.execShellCommand("docker create -ti --name temp task:latest bash");
+							await cmdHelper.execShellCommand("docker cp temp:/task/results ./dockerResults");
+							const resultFileIdentifier  = await cmdHelper.ipfsAdd("./dockerResults");
+							const postBody = {
+								transactionId:transactionId,
+								type:"provider",
+								fileIdentifiers:{
+									resultFileIdentifier:resultFileIdentifier
+								},
+								fileKey:{
+									resultFileKey:resultFileIdentifier
+								}
+							}
+							axios.post(vmIp + "/api/v1/task/fileIdentifier",postBody)
+								.then(response => {
+									console.log(response.data);
+								})
+
+						} )
 						.catch(err => console.log(err));
 				} else {
 					console.log("calling");
