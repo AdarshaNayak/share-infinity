@@ -33,7 +33,6 @@ export default class showHostsController {
 		this.$mdDialog.show(
 			ctrl.$mdDialog
 				.alert()
-				.parent(angular.element(document.body))
 				.clickOutsideToClose(true)
 				.title("Submitted Successfully!")
 				.textContent(`Transaction ID : ${transactionId}`)
