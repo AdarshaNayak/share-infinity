@@ -22,7 +22,7 @@ function createDockerFile(transactionId, commandsToRun, filePath, vmIp) {
 	}
 
 	//generate the requirements and shell script file and place it inside the data folder
-	var exec_command = "pipreqs --force " + filePath.replace(/\s/g,"\\ ");
+	var exec_command = "pipreqs --force " + filePath.replace(/\s/g, "\\ ");
 	exec(exec_command, (error, stdout, stderr) => {
 		if (error) {
 			// error condition
@@ -30,14 +30,21 @@ function createDockerFile(transactionId, commandsToRun, filePath, vmIp) {
 		} else {
 			// add the shell script to the folder as well
 			//set the start time and then
+			console.log(commandsToRun);
+			// adding logging feature
+			var temp = commandsToRun.split("\n");
+			for (let i = 0; i < temp.length; i++) {
+				temp[i] = temp[i] + ` &>> results/logs_${transactionId}.txt`;
+			}
+			console.log(temp);
 			var bashFileArr = [
 				"#!/bin/bash",
 				"curl --request POST --url " +
 					vmIp +
 					'/api/v1/task/time --header \'content-type: application/json\'  --data \'{ "type": "startTime",  "transactionId": "' +
 					transactionId +
-					"\"}'",
-				commandsToRun,
+					"\"}'"
+			].concat(temp, [
 				"curl --request POST --url " +
 					vmIp +
 					'/api/v1/task/time --header \'content-type: application/json\'  --data \'{ "type": "endTime",  "transactionId": "' +
@@ -48,7 +55,7 @@ function createDockerFile(transactionId, commandsToRun, filePath, vmIp) {
 					'/api/v1/task/status --header \'content-type: application/json\'  --data \'{ "status": "completed",  "transactionId": "' +
 					transactionId +
 					"\"}'"
-			];
+			]);
 			var file_sh = fs.createWriteStream(filePath + "/shellScript.sh");
 			file_sh.on("error", function(err) {
 				/* error handling */
