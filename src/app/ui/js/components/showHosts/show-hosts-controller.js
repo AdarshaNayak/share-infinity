@@ -25,7 +25,7 @@ export default class showHostsController {
 		console.log(this.providers);
 	}
 
-	showAlert(transactionId) {
+	showAlert(title, text) {
 		const ctrl = this;
 		// Appending dialog to document.body to cover sidenav in docs app
 		// Modal dialogs should fully cover application
@@ -34,8 +34,8 @@ export default class showHostsController {
 			ctrl.$mdDialog
 				.alert()
 				.clickOutsideToClose(true)
-				.title("Submitted Successfully!")
-				.textContent(`Transaction ID : ${transactionId}`)
+				.title(title)
+				.textContent(text)
 				.ariaLabel("Alert success")
 				.ok("OK")
 		);
@@ -70,7 +70,7 @@ export default class showHostsController {
 				// 		transactionId
 				// );
 
-				ctrl.showAlert(transactionId);
+				//ctrl.showAlert(transactionId);
 
 				const filePath = document.getElementById(
 					"filepath_" + myproviderId
@@ -88,14 +88,23 @@ export default class showHostsController {
 					.then(
 						function(response) {
 							console.log(response.data);
+							ctrl.showAlert(
+								"Task Submitted Successfully!",
+								`Transaction ID: ${transactionId}`
+							);
 						},
 						function(err) {
 							console.log(err);
+							ctrl.showAlert(
+								"Dockerfile creation failed due to error in python code",
+								"Please resubmit after checking your code"
+							);
 						}
 					);
 			},
 			function() {
-				"failed to submit task";
+				console.log("failed to submit task");
+				ctrl.showAlert("Task submission failed!", "");
 			}
 		);
 	}

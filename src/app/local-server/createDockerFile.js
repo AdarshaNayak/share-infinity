@@ -10,6 +10,7 @@ const dockerFile = homedir + "/share-infinity-transactions/Dockerfile";
 const type = "consumer";
 var dockerFileIdentifier = "";
 var dataFileIdentifier = "";
+var pythonError = false;
 
 function createDockerFile(transactionId, commandsToRun, filePath, vmIp) {
 	// const transactionId = transactionId;
@@ -28,6 +29,7 @@ function createDockerFile(transactionId, commandsToRun, filePath, vmIp) {
 			// error condition
 			console.log(`error: ${error.message}`);
 			// post fail here ... failed due to syntax error in code
+			pythonError = true;
 		} else {
 			// add the shell script to the folder as well
 			//set the start time and then
@@ -151,6 +153,8 @@ function createDockerFile(transactionId, commandsToRun, filePath, vmIp) {
 				});
 		}
 	});
+
+	return pythonError;
 }
 
 module.exports = createDockerFile;
