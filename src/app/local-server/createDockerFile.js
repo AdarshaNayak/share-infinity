@@ -27,6 +27,7 @@ function createDockerFile(transactionId, commandsToRun, filePath, vmIp) {
 		if (error) {
 			// error condition
 			console.log(`error: ${error.message}`);
+			// post fail here ... failed due to syntax error in code
 		} else {
 			// add the shell script to the folder as well
 			//set the start time and then
