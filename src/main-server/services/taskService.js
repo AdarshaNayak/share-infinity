@@ -10,14 +10,34 @@ const CompletedTasks = db.CompletedTasks;
 const TaskFiles = db.TaskFiles;
 const TaskAllocatedProviders = db.TaskAllocatedProviders;
 
+async function getProviderRating(providerId) {
+	CompletedTasks.find({providerId:providerId})
+		.then(tasks => {
+			if(tasks){
+				const count = tasks.length;
+				let totalRating = 0;
+				for(const task of tasks) {
+					totalRating+=task.rating;
+				}
+				return totalRating/count;
+			}
+			return 0;
+		})
+		.catch(error => console.log("error while finding average rating ",error));
+}
+
 async function getProviders(minCpu, minRam, minStorage) {
 	return Provider.find({
 		$and: [{ isOnline: { $eq: true } }, { isAssigned: { $eq: false } }]
 	}).then(docs => {
-		const providerIds = [];
-		docs.forEach(provider => providerIds.push(provider.providerId));
-		return SystemInfo.find({ userId: { $in: providerIds } }).then(
-			systemsInfos => {
+		const providerIds = {};
+		docs.forEach(provider => providerIds[provider.providerId] = {
+					"charge":provider.providerCharge,
+				}
+			);
+
+		return SystemInfo.find({ userId: { $in: Object.keys(providerIds) } }).then(
+			async systemsInfos => {
 				const result = { providers: [] };
 				const matchedSystems = systemsInfos.filter(systemInfo => {
 					return (
@@ -26,19 +46,24 @@ async function getProviders(minCpu, minRam, minStorage) {
 						systemInfo.storage >= minStorage
 					);
 				});
-				matchedSystems.forEach(system => {
+				for (const system of matchedSystems) {
+					const providerRating = await getProviderRating(system.userId);
 					result["providers"].push({
 						["providerId"]: system.userId,
 						["ram"]: system.ram,
 						["cpu"]: system.cpuCores,
-						["storage"]: system.storage
+						["storage"]: system.storage,
+						["rating"]:providerRating,
+						["charge"]:providerIds[system.userId]["charge"],
+
 					});
-				});
+				}
 				return result;
 			}
 		);
 	});
 }
+
 
 async function createTask({ userId, providerId }) {
 	return Task.create({
@@ -46,6 +71,9 @@ async function createTask({ userId, providerId }) {
 		providerId: providerId,
 		isContainerRunning: false,
 		isCompleted: false,
+		status:"submitted",
+		isRated:false,
+		isPaymentDone:false,
 		startTime: null,
 		endTime: null,
 		cost: null
@@ -90,7 +118,7 @@ async function getTasks(userId, type) {
 					["userId"]:
 						type === "consumer" ? task.providerId : task.consumerId,
 					["transactionId"]: task.transactionId,
-					["status"]: "running"
+					["status"]: task.status
 				};
 				if (task.isCompleted) {
 					await db.CompletedTasks.findOne({
@@ -99,7 +127,6 @@ async function getTasks(userId, type) {
 						.then(completedTask => {
 							if (!completedTask)
 								throw new Error("task not found");
-							taskItem["status"] = completedTask.status;
 							taskItem["rating"] = completedTask.rating;
 							taskItem["cost"] = completedTask.cost;
 						})
@@ -121,17 +148,28 @@ async function updateTaskStatus({ transactionId, status }) {
 		return { message: "task not found" };
 	}
 	task.isCompleted = true;
+	task.status = status;
 	task.save()
 		.then(task => {
 			CompletedTasks.create({
 				transactionId: task.transactionId,
 				consumerId: task.consumerId,
 				providerId: task.providerId,
-				status: status
 			}).then(response => {
 				emailService.sendMail(response.transactionId);
-				return;
-			});
+				return response;
+			}).then((response) => {
+				getTaskTime(response.transactionId)
+					.then( async time => {
+						if(time.providerId){
+							const providerInfo = await Provider.findOne({providerId:time.providerId});
+							const cost = (providerInfo.endTime - providerInfo.startTime) /(1000*60);
+							const res = await setTaskCost({ transactionId:response.providerId, cost:cost });
+							console.log("set task status ",res);
+						}
+					})
+			})
+
 		})
 		.catch(err => err);
 	return { message: "updated Successfully" };
@@ -142,19 +180,10 @@ async function getTaskStatus(transactionId) {
 	if (task === null) {
 		return { message: "task not found" };
 	}
-	if (task.isCompleted === true) {
-		return CompletedTasks.findOne({ transactionId: transactionId })
-			.then(completedTask => {
-				return {
-					status: completedTask.status
-				};
-			})
-			.catch(err => err);
-	} else {
-		return {
-			status: "running"
-		};
-	}
+	return {
+		status: task.status
+	};
+
 }
 
 async function setTaskTime({ transactionId, type }) {
@@ -309,6 +338,13 @@ async function updateRatings(ratingsParam) {
 	await completedTask.save();
 }
 
+async function setContainerStatus(transactionId,status){
+	await Task.findOne({transactionId:transactionId}).then(async task => {
+		task.isContainerRunning = status === "running";
+		await task.save();
+	})
+}
+
 module.exports = {
 	getProviders,
 	createTask,
@@ -322,5 +358,6 @@ module.exports = {
 	getFileIdentifier,
 	getTaskAllocatedStatus,
 	updateSystemInfo,
-	updateRatings
+	updateRatings,
+	setContainerStatus
 };
