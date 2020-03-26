@@ -18,9 +18,6 @@ var providerSchema = new Schema({
     },
     providerCharge:{
         type: Number
-    },
-    ratings:{
-        type: Number
     }
 });
 
