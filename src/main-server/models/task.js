@@ -22,11 +22,20 @@ var taskSchema = new Schema({
     isCompleted:{
         type:Boolean
     },
+    status:{
+        type: String
+    },
     startTime:{
         type:Date
     },
     endTime:{
         type:Date
+    },
+    isRated:{
+        type:Boolean
+    },
+    isPaymentDone:{
+        type:Boolean
     }
 });
 
