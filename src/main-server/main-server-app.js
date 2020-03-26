@@ -105,6 +105,28 @@ app.get("/api/v1/providers/:providerId/:state", (req, res, next) => {
 		.catch(err => next(err));
 });
 
+app.get("/api/v1/providers/setIsAssigned/:providerId/:isAssigned", (req, res, next) => {
+	const providerId = req.params.providerId;
+	const isAssigned = req.params.isAssigned;
+	console.log(providerId, isAssigned);
+	Provider.findOne({ providerId: providerId })
+		.then(provider => {
+			console.log(provider);
+			if(provider){
+				if (isAssigned == "true") {
+					provider.isAssigned = true;
+				} else {
+					provider.isAssigned = false;
+				}
+			}
+			provider.save();
+		})
+		.then(() => {
+			res.sendStatus(200);
+		})
+		.catch(err => next(err));
+});
+
 app.post("/api/v1/tasks", (req, res, next) => {
 	taskService
 		.createTask(req.body)
@@ -192,15 +214,32 @@ app.get(
 	}
 );
 
-app.get("/api/v1/polling/taskRequired/:userId", (req, res, next) => {
-	taskService
-		.getTaskAllocatedStatus(req.params.userId)
-		.then(response => {
-			console.log(response);
-			res.send(response);
+app.post("/api/v1/polling", (req, res, next) => {
+	console.log("in polling")
+	console.log(req.body);
+	const type = req.body.type;
+	if(type === "taskRequired"){
+		const userId = req.body.userId;
+		taskService
+			.getTaskAllocatedStatus(userId)
+			.then(response => {
+				console.log(response);
+				res.send(response);
+			})
+			.catch(error => next(error));
+	}
+	else if(type === "containerRunning") {
+		taskService.setContainerStatus(req.body.transactionId,req.body.status).then(() => {
+			res.sendStatus(200)
 		})
-		.catch(error => next(error));
+			.catch(() => {
+				res.sendStatus(400);
+			})
+	}
+
 });
+
+
 
 app.post("/api/v1/sysinfo", (req, res, next) => {
 	taskService
