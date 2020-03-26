@@ -22,9 +22,6 @@ var completedTaskSchema = new Schema({
     },
     cost:{
         type:Number
-    },
-    status:{
-        type:String
     }
 });
 
