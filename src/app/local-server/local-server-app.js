@@ -8,6 +8,7 @@ const app = express();
 const port = 3000;
 const vmIp = "http://localhost:8000";
 let timeoutObj = null;
+let containerIntervalObj = null;
 const { exec } = require("child_process");
 const physicalCpuCount = require("physical-cpu-count");
 const os = require("os");
@@ -86,7 +87,10 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 			.catch(err => console.log("hey"));
 		console.log("polling started");
 		axios
-			.get(vmIp + "/api/v1/polling/taskRequired/" + userId)
+			.post(vmIp + "/api/v1/polling",{
+				type:"taskRequired" ,
+				userId:userId
+			})
 			.then(response => {
 				const transactionId = response.data.transactionId;
 				console.log(transactionId);
@@ -139,6 +143,7 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 									projectName +
 									"/dockerfile"
 							);
+
 							let output = await cmdHelper.execShellCommand(
 								"docker build -t 'task:latest' ./" +
 									transactionId +
@@ -146,47 +151,98 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 									projectName
 							);
 							console.log(output);
+							 await axios.post(vmIp + "/api/v1/task/status",{
+								transactionId:transactionId,
+								status:"running"
+							}).then(async () => {
+								 containerIntervalObj =  setInterval(() => {
+										 axios.post(vmIp + "/api/v1/polling", {
+											 type: "containerRunning",
+											 transactionId: transactionId,
+											 status: "running"
+										 }).then((response) => {
+										 	console.log("container polling data ",response.data);
+										 })
+									 }, 1000);
+								 }
+							 )
 							output = await cmdHelper.execShellCommand(
 								"docker run task:latest"
 							);
 							console.log(output);
-							await cmdHelper.execShellCommand(
-								"docker create -ti --name temp task:latest bash"
-							);
-							await cmdHelper.execShellCommand(
-								"docker cp temp:/task/results ./dockerResults"
-							);
-							await cmdHelper.execShellCommand(
-								"docker rm -f temp"
-							);
-							await compressing.tar.compressDir(
-								"./dockerResults",
-								"./results.zip"
-							);
+							try{
+								await cmdHelper.execShellCommand(
+									"docker create -ti --name temp task:latest bash"
+								);
+								await cmdHelper.execShellCommand(
+									"docker cp temp:/task/results ./dockerResults"
+								);
+								await cmdHelper.execShellCommand(
+									"docker rm -f temp"
+								);
+								await compressing.tar.compressDir(
+									"./dockerResults",
+									"./results.zip"
+								);
 
-							const resultFileIdentifier = await cmdHelper.ipfsAdd(
-								"./results.zip"
-							);
-							const postBody = {
-								transactionId: transactionId,
-								type: "provider",
-								fileIdentifiers: {
-									resultFileIdentifier: resultFileIdentifier
-								},
-								fileKey: {
-									resultFileKey: resultFileIdentifier
-								}
-							};
-							axios
-								.post(
-									vmIp + "/api/v1/task/fileIdentifier",
-									postBody
-								)
-								.then(response => {
-									console.log(response.data);
+								 const resultFileIdentifier = await cmdHelper.ipfsAdd(
+									"./results.zip"
+								);
+								const postBody = {
+									transactionId: transactionId,
+									type: "provider",
+									fileIdentifiers: {
+										resultFileIdentifier: resultFileIdentifier
+									},
+									fileKey: {
+										resultFileKey: resultFileIdentifier
+									}
+								};
+								axios
+									.post(
+										vmIp + "/api/v1/task/fileIdentifier",
+										postBody
+									)
+									.then(response => {
+										console.log(response.data);
+									})
+									.catch(async err => {
+										console.log(err);
+										await axios.post(vmIp + "/api/v1/task/status",{
+											transactionId:transactionId,
+											status:"failed"
+										});
+									});
+							}
+							catch (e) {
+								await axios.post(vmIp + "/api/v1/task/status",{
+									transactionId:transactionId,
+									status:"failed"
 								});
-						})
-						.catch(err => console.log(err));
+							}
+						}).then(() => {
+
+						axios.post(vmIp + "/api/v1/polling", {
+							type: "containerRunning",
+							transactionId: transactionId,
+							status: "stopped"
+						}).then(response => {
+							console.log("container polling stopped ",response.data);
+						});
+
+						clearInterval(containerIntervalObj);
+						axios.get(vmIp + "/api/v1/providers/setIsAssigned/"+userId+"/false")
+							.then(response => console.log("provider "+userId+" is free "+response.data))
+						axios
+							.get(
+								"http://127.0.0.1:" +
+								port +
+								"/api/v1/local/polling/provider/" +
+								userId +
+								"/start"
+							)
+					})
+
 				} else {
 					console.log("calling");
 					timeoutObj = setTimeout(function() {
@@ -248,7 +304,7 @@ app.post("/api/v1/local/sysinfo", (req, res) => {
 			axios
 				.post(vmIp + "/api/v1/sysinfo", systemInfo)
 				.then(function(response) {
-					console.log(response);
+					console.log(response.data);
 					res.send(response);
 				})
 				.catch(function(err) {
