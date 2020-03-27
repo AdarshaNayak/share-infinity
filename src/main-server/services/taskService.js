@@ -13,6 +13,7 @@ const TaskAllocatedProviders = db.TaskAllocatedProviders;
 async function getProviderRating(providerId) {
 	CompletedTasks.find({ providerId: providerId })
 		.then(tasks => {
+			console.log("tasks ",tasks);
 			if (tasks) {
 				const count = tasks.length;
 				let totalRating = 0;
@@ -53,6 +54,7 @@ async function getProviders(minCpu, minRam, minStorage) {
 			});
 			for (const system of matchedSystems) {
 				const providerRating = await getProviderRating(system.userId);
+				console.log("rating ",providerRating);
 				result["providers"].push({
 					["providerId"]: system.userId,
 					["ram"]: system.ram,
