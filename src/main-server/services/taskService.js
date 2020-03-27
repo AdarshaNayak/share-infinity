@@ -11,19 +11,21 @@ const TaskFiles = db.TaskFiles;
 const TaskAllocatedProviders = db.TaskAllocatedProviders;
 
 async function getProviderRating(providerId) {
-	CompletedTasks.find({providerId:providerId})
+	CompletedTasks.find({ providerId: providerId })
 		.then(tasks => {
-			if(tasks){
+			if (tasks) {
 				const count = tasks.length;
 				let totalRating = 0;
-				for(const task of tasks) {
-					totalRating+=task.rating;
+				for (const task of tasks) {
+					totalRating += task.rating;
 				}
-				return totalRating/count;
+				return totalRating / count;
 			}
 			return 0;
 		})
-		.catch(error => console.log("error while finding average rating ",error));
+		.catch(error =>
+			console.log("error while finding average rating ", error)
+		);
 }
 
 async function getProviders(minCpu, minRam, minStorage) {
@@ -31,39 +33,39 @@ async function getProviders(minCpu, minRam, minStorage) {
 		$and: [{ isOnline: { $eq: true } }, { isAssigned: { $eq: false } }]
 	}).then(docs => {
 		const providerIds = {};
-		docs.forEach(provider => providerIds[provider.providerId] = {
-					"charge":provider.providerCharge,
-				}
-			);
-
-		return SystemInfo.find({ userId: { $in: Object.keys(providerIds) } }).then(
-			async systemsInfos => {
-				const result = { providers: [] };
-				const matchedSystems = systemsInfos.filter(systemInfo => {
-					return (
-						systemInfo.ram >= minRam &&
-						systemInfo.cpuCores >= minCpu &&
-						systemInfo.storage >= minStorage
-					);
-				});
-				for (const system of matchedSystems) {
-					const providerRating = await getProviderRating(system.userId);
-					result["providers"].push({
-						["providerId"]: system.userId,
-						["ram"]: system.ram,
-						["cpu"]: system.cpuCores,
-						["storage"]: system.storage,
-						["rating"]:providerRating,
-						["charge"]:providerIds[system.userId]["charge"],
-
-					});
-				}
-				return result;
-			}
+		docs.forEach(
+			provider =>
+				(providerIds[provider.providerId] = {
+					charge: provider.providerCharge
+				})
 		);
+
+		return SystemInfo.find({
+			userId: { $in: Object.keys(providerIds) }
+		}).then(async systemsInfos => {
+			const result = { providers: [] };
+			const matchedSystems = systemsInfos.filter(systemInfo => {
+				return (
+					systemInfo.ram >= minRam &&
+					systemInfo.cpuCores >= minCpu &&
+					systemInfo.storage >= minStorage
+				);
+			});
+			for (const system of matchedSystems) {
+				const providerRating = await getProviderRating(system.userId);
+				result["providers"].push({
+					["providerId"]: system.userId,
+					["ram"]: system.ram,
+					["cpu"]: system.cpuCores,
+					["storage"]: system.storage,
+					["rating"]: providerRating,
+					["charge"]: providerIds[system.userId]["charge"]
+				});
+			}
+			return result;
+		});
 	});
 }
-
 
 async function createTask({ userId, providerId }) {
 	return Task.create({
@@ -71,9 +73,9 @@ async function createTask({ userId, providerId }) {
 		providerId: providerId,
 		isContainerRunning: false,
 		isCompleted: false,
-		status:"submitted",
-		isRated:false,
-		isPaymentDone:false,
+		status: "submitted",
+		isRated: false,
+		isPaymentDone: false,
 		startTime: null,
 		endTime: null,
 		cost: null
@@ -154,22 +156,30 @@ async function updateTaskStatus({ transactionId, status }) {
 			CompletedTasks.create({
 				transactionId: task.transactionId,
 				consumerId: task.consumerId,
-				providerId: task.providerId,
-			}).then(response => {
-				emailService.sendMail(response.transactionId);
-				return response;
-			}).then((response) => {
-				getTaskTime(response.transactionId)
-					.then( async time => {
-						if(time.providerId){
-							const providerInfo = await Provider.findOne({providerId:time.providerId});
-							const cost = (providerInfo.endTime - providerInfo.startTime) /(1000*60);
-							const res = await setTaskCost({ transactionId:response.providerId, cost:cost });
-							console.log("set task status ",res);
-						}
-					})
+				providerId: task.providerId
 			})
-
+				.then(response => {
+					emailService.sendMail(response.transactionId);
+					return response;
+				})
+				.then(response => {
+					getTaskTime(response.transactionId).then(async time => {
+						if (time.providerId) {
+							const providerInfo = await Provider.findOne({
+								providerId: time.providerId
+							});
+							const cost =
+								(providerInfo.endTime -
+									providerInfo.startTime) /
+								(1000 * 60);
+							const res = await setTaskCost({
+								transactionId: response.providerId,
+								cost: cost
+							});
+							console.log("set task status ", res);
+						}
+					});
+				});
 		})
 		.catch(err => err);
 	return { message: "updated Successfully" };
@@ -183,7 +193,6 @@ async function getTaskStatus(transactionId) {
 	return {
 		status: task.status
 	};
-
 }
 
 async function setTaskTime({ transactionId, type }) {
@@ -334,15 +343,29 @@ async function updateRatings(ratingsParam) {
 	const completedTask = await CompletedTasks.findOne({
 		transactionId: ratingsParam.transactionId
 	});
+
 	completedTask.rating = ratingsParam.rating;
-	await completedTask.save();
+	await completedTask
+		.save()
+		.then(res => console.log("rating set successfully"))
+		.catch(err => console.log(err));
+
+	const task = await Task.findOne({
+		transactionId: ratingsParam.transactionId
+	});
+	task.isRated = true;
+
+	await task
+		.save()
+		.then(res => console.log("isRated set successfully"))
+		.catch(err => console.log(err));
 }
 
-async function setContainerStatus(transactionId,status){
-	await Task.findOne({transactionId:transactionId}).then(async task => {
+async function setContainerStatus(transactionId, status) {
+	await Task.findOne({ transactionId: transactionId }).then(async task => {
 		task.isContainerRunning = status === "running";
 		await task.save();
-	})
+	});
 }
 
 module.exports = {
