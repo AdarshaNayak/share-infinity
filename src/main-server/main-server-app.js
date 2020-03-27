@@ -18,6 +18,7 @@ const errorHandler = require("./_helpers/error-handler");
 const userService = require("./services/user.service");
 const taskService = require("./services/taskService");
 const Provider = require("./models/provider");
+const walletService = require("./services/wallet.service");
 
 //helpers
 //const loadDatabase =  require('./_helpers/loadDatabase');
@@ -255,6 +256,27 @@ app.post("/api/v1/rating", (req, res, next) => {
 		.catch(err => next(err));
 });
 
+app.get("/api/v1/balance/:userId",(req,res,next) => {
+	walletService.getBalance(req.params.userId)
+		.then(response => res.send(response))
+		.catch(err => next(err));
+});
+
+app.put("/api/v1/balance",(req,res,next) => {
+	walletService.addBalance(req.body)
+		.then(response => res.send(response))
+		.catch(err => next(err));
+});
+
+app.post("/api/v1/pay",(req,res,next) => {
+	walletService.makePayment(req.body).then(response => {
+			if(response.error){
+				res.send(response).sendStatus(400)
+			}
+			else
+				res.send(response);
+		}).catch(err => next(err));
+})
 // NOTE: the below middleware has to be applied after calling the api so do not move it
 // global error handler
 app.use(errorHandler);
