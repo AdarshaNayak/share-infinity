@@ -23,12 +23,12 @@
 			<div
 				class="card"
 				ng-attr-id="{{item.transactionId}}"
-				ng-class="{'border-success': item.status == 'completed', 'border-primary': item.status == 'running','border-danger': item.status == 'failed'}"
+				ng-class="{'border-success': item.status == 'completed', 'border-primary': item.status == 'running','border-danger': item.status == 'failed','border-secondary':item.status == 'submitted'}"
 			>
 				<div flex-gt-sm="50"></div>
 				<h5
 					class="card-header text-white"
-					ng-class="{'bg-success': item.status == 'completed', 'bg-primary': item.status == 'running','bg-danger': item.status == 'failed'}"
+					ng-class="{'bg-success': item.status == 'completed', 'bg-primary': item.status == 'running','bg-danger': item.status == 'failed', 'bg-secondary':item.status == 'submitted'}"
 				>
 					Transaction ID : {{ item.transactionId }}
 				</h5>
