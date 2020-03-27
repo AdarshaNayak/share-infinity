@@ -18,10 +18,12 @@ var completedTaskSchema = new Schema({
         required: true
     },
     rating:{
-        type:Number
+        type:Number,
+        default:0
     },
     cost:{
-        type:Number
+        type:Number,
+        default:0
     }
 });
 

@@ -11,9 +11,10 @@ const TaskFiles = db.TaskFiles;
 const TaskAllocatedProviders = db.TaskAllocatedProviders;
 
 async function getProviderRating(providerId) {
-	CompletedTasks.find({ providerId: providerId })
+	 return CompletedTasks.find({ providerId: providerId })
 		.then(tasks => {
-			if (tasks) {
+			console.log("tasks ",tasks);
+			if (tasks.length!=0) {
 				const count = tasks.length;
 				let totalRating = 0;
 				for (const task of tasks) {
@@ -53,6 +54,7 @@ async function getProviders(minCpu, minRam, minStorage) {
 			});
 			for (const system of matchedSystems) {
 				const providerRating = await getProviderRating(system.userId);
+				console.log("rating ",providerRating);
 				result["providers"].push({
 					["providerId"]: system.userId,
 					["ram"]: system.ram,
@@ -120,13 +122,16 @@ async function getTasks(userId, type) {
 					["userId"]:
 						type === "consumer" ? task.providerId : task.consumerId,
 					["transactionId"]: task.transactionId,
-					["status"]: task.status
+					["status"]: task.status,
+					["isRated"]:task.isRated,
+					["isPaymentDone"]:task.isPaymentDone
 				};
 				if (task.isCompleted) {
 					await db.CompletedTasks.findOne({
 						transactionId: task.transactionId
 					})
 						.then(completedTask => {
+							console.log("completed task ",completedTask);
 							if (!completedTask)
 								throw new Error("task not found");
 							taskItem["rating"] = completedTask.rating;
@@ -173,7 +178,7 @@ async function updateTaskStatus({ transactionId, status }) {
 									providerInfo.startTime) /
 								(1000 * 60);
 							const res = await setTaskCost({
-								transactionId: response.providerId,
+								transactionId: response.transactionId,
 								cost: cost
 							});
 							console.log("set task status ", res);

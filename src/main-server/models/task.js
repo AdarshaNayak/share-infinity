@@ -17,10 +17,12 @@ var taskSchema = new Schema({
         ref:'User'
     },
     isContainerRunning:{
-        type:Boolean
+        type:Boolean,
+        default:false
     },
     isCompleted:{
-        type:Boolean
+        type:Boolean,
+        default: false,
     },
     status:{
         type: String
@@ -32,10 +34,12 @@ var taskSchema = new Schema({
         type:Date
     },
     isRated:{
-        type:Boolean
+        type:Boolean,
+        default:false
     },
     isPaymentDone:{
-        type:Boolean
+        type:Boolean,
+        default:false
     }
 });
 
