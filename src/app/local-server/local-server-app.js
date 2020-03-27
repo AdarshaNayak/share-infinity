@@ -6,7 +6,7 @@ const axios = require("axios");
 const compressing = require("compressing");
 const app = express();
 const port = 3000;
-const vmIp = "http://localhost:8000";
+const vmIp = "http://54.210.130.81:8000";
 let timeoutObj = null;
 let containerIntervalObj = null;
 const { exec } = require("child_process");
@@ -80,12 +80,12 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 	console.log(option, userId);
 
 	if (option == "start") {
-		console.log(vmIp + "/api/v1/providers/" + userId + "/online");
+		// console.log(vmIp + "/api/v1/providers/" + userId + "/online");
 		axios
 			.get(vmIp + "/api/v1/providers/" + userId + "/online")
 			.then(res => console.log(res.data))
 			.catch(err => console.log("hey"));
-		console.log("polling started");
+		// console.log("polling started");
 		axios
 			.post(vmIp + "/api/v1/polling", {
 				type: "taskRequired",
