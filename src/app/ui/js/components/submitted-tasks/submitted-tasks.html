@@ -84,13 +84,13 @@
 				>
 					<div class="card-body">
 						<h5 class="card-title">
-							Amount to be paid : {{item.amount}} credits
+							Amount to be paid : {{item.cost}} credits
 						</h5>
 
 						<button
 							class="btn btn-primary"
 							style="position: relative; left: -7px;"
-							ng-click="$ctrl.makePayment(item.transactionId,item.amount)"
+							ng-click="$ctrl.makePayment(item.transactionId,item.cost)"
 						>
 							Make Payment
 						</button>
