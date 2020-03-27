@@ -11,7 +11,7 @@ const TaskFiles = db.TaskFiles;
 const TaskAllocatedProviders = db.TaskAllocatedProviders;
 
 async function getProviderRating(providerId) {
-	CompletedTasks.find({ providerId: providerId })
+	return CompletedTasks.find({ providerId: providerId })
 		.then(tasks => {
 			console.log("tasks ",tasks);
 			if (tasks) {
