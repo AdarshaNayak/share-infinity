@@ -8,7 +8,8 @@ var platformProfitSchema = new Schema({
         required:true
     },
     profit:{
-        type:Number
+        type:Number,
+        default:0
     }
 });
 

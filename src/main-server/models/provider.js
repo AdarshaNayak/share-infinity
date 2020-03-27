@@ -8,16 +8,20 @@ var providerSchema = new Schema({
         required: true
     },
     isOnline:{
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     providerInUse:{
         type:Boolean,
+        default:false
     },
     isAssigned:{
-        type:Boolean
+        type:Boolean,
+        default:false
     },
     providerCharge:{
-        type: Number
+        type: Number,
+        default:0
     }
 });
 
