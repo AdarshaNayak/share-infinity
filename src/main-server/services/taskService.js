@@ -122,13 +122,16 @@ async function getTasks(userId, type) {
 					["userId"]:
 						type === "consumer" ? task.providerId : task.consumerId,
 					["transactionId"]: task.transactionId,
-					["status"]: task.status
+					["status"]: task.status,
+					["isRated"]:task.isRated,
+					["isPaymentDone"]:task.isPaymentDone
 				};
 				if (task.isCompleted) {
 					await db.CompletedTasks.findOne({
 						transactionId: task.transactionId
 					})
 						.then(completedTask => {
+							console.log("completed task ",completedTask);
 							if (!completedTask)
 								throw new Error("task not found");
 							taskItem["rating"] = completedTask.rating;
