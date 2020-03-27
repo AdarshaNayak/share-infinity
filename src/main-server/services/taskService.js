@@ -178,7 +178,7 @@ async function updateTaskStatus({ transactionId, status }) {
 									providerInfo.startTime) /
 								(1000 * 60);
 							const res = await setTaskCost({
-								transactionId: response.providerId,
+								transactionId: response.transactionId,
 								cost: cost
 							});
 							console.log("set task status ", res);
