@@ -44,6 +44,8 @@ async function makePayment({transactionId,amount}) {
             try{
                 await providerWallet.save();
                 await consumerWallet.save();
+                const task = await Task.findOne({transactionId:transactionId});
+                task.isPaymentDone = true;
             }
             catch (e) {
                 console.log("error occurred while updating balance ",e);
