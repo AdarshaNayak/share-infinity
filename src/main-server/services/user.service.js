@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const db = require("../_helpers/db");
 const User = db.User;
 const Provider = db.Provider;
+const Wallet = db.Wallet;
 
 module.exports = {
 	authenticate,
@@ -44,6 +45,7 @@ async function create(userParam) {
 	await user.save();
 
 	Provider.create({providerId:userParam.userId,isOnline:false,providerInUse:false,isAssigned:false,providerCharge:0,ratings:0}).then();
+	Wallet.create({userId:userParam.userId,balance:0}).then();
 }
 
 async function _delete(id) {
