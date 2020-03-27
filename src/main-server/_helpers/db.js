@@ -15,4 +15,5 @@ module.exports = {
 	TaskFiles: require("../models/taskFiles"),
 	CompletedTasks: require("../models/completedTask"),
 	TaskAllocatedProviders: require("../models/taskAllocatedProviders"),
+	Wallet: require("../models/wallet")
 };
