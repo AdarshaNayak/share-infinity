@@ -6,7 +6,7 @@ const axios = require("axios");
 const compressing = require("compressing");
 const app = express();
 const port = 3000;
-const vmIp = "http://localhost:8000";
+const vmIp = "http://54.210.130.81:8000";
 let timeoutObj = null;
 let containerIntervalObj = null;
 const { exec } = require("child_process");
@@ -125,14 +125,14 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 											});
 									}, 1000);
 								});
-							output = await cmdHelper.execShellCommand("docker run -v "+path.slice(0,-1).replace(/\s/g,"\\ ")+"/dockerResults/:/task/results task:latest");
+							output = await cmdHelper.execShellCommand(`docker run -v --name ${transactionId} `+path.slice(0,-1).replace(/\s/g,"\\ ")+`/dockerResults${transactionId}/:/task/results task:latest`);
 							console.log(output);
 								// await cmdHelper.execShellCommand("docker create -ti --name temp task:latest bash");
 								// await cmdHelper.execShellCommand("docker cp temp:/task/results ./dockerResults");
 								// await cmdHelper.execShellCommand("docker rm -f temp");
-								await compressing.tar.compressDir("./dockerResults", "./results.zip");
+								await compressing.tar.compressDir(`./dockerResults${transactionId}`, `./results${transactionId}.zip`);
 
-								const resultFileIdentifier = await cmdHelper.ipfsAdd("./results.zip");
+								const resultFileIdentifier = await cmdHelper.ipfsAdd(`./results${transactionId}.zip`);
 								const postBody = {
 									transactionId: transactionId,
 									type: "provider",
@@ -143,8 +143,8 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 										resultFileKey: resultFileIdentifier
 									}
 								};
-								await cmdHelper.execShellCommand("rm -rf dockerResults");
-								await cmdHelper.execShellCommand("rm results.zip");
+								await cmdHelper.execShellCommand(`rm -rf dockerResults${transactionId}`);
+								await cmdHelper.execShellCommand(`rm results${transactionId}.zip`);
 								axios
 									.post(vmIp + "/api/v1/task/fileIdentifier", postBody)
 									.then(response => {
