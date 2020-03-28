@@ -95,105 +95,44 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 				const transactionId = response.data.transactionId;
 				console.log(transactionId);
 				if (transactionId !== null) {
-					axios
-						.get(
-							vmIp +
-								"/api/v1/task/fileIdentifier/provider/" +
-								transactionId
-						)
-						.then(async response => {
-							await cmdHelper.execShellCommand(
-								"mkdir " + transactionId
-							);
-							const path = await cmdHelper.execShellCommand(
-								"pwd"
-							);
-							await cmdHelper.ipfsGet(
-								response.data["dataFileIdentifier"],
-								path.slice(0, -1) +
-									"/" +
-									transactionId +
-									"/data.zip"
-							);
-							const dockerFileIdentifier =
-								response.data["dockerFileIdentifier"];
-							await compressing.tar.uncompress(
-								path.slice(0, -1) +
-									"/" +
-									transactionId +
-									"/data.zip",
-								path.slice(0, -1) + "/" + transactionId
-							);
-							let projectPath = await cmdHelper.execShellCommand(
-								"ls -d " +
-									path.slice(0, -1).replace(/\s/g, "\\ ") +
-									"/" +
-									transactionId +
-									"/*/"
-							);
+					axios.get(vmIp + "/api/v1/task/fileIdentifier/provider/" + transactionId).then(async response => {
+							await cmdHelper.execShellCommand("mkdir " + transactionId);
+							const path = await cmdHelper.execShellCommand("pwd");
+							await cmdHelper.ipfsGet(response.data["dataFileIdentifier"], path.slice(0, -1) + "/" + transactionId + "/data.zip");
+							const dockerFileIdentifier = response.data["dockerFileIdentifier"];
+							await compressing.tar.uncompress(path.slice(0, -1) + "/" + transactionId + "/data.zip", path.slice(0, -1) + "/" + transactionId);
+							let projectPath = await cmdHelper.execShellCommand("ls -d " + path.slice(0, -1).replace(/\s/g, "\\ ") + "/" + transactionId + "/*/");
 							projectPath = projectPath.split("/");
-							const projectName =
-								projectPath[projectPath.length - 2];
-							await cmdHelper.ipfsGet(
-								dockerFileIdentifier,
-								path.slice(0, -1) +
-									"/" +
-									transactionId +
-									"/" +
-									projectName +
-									"/dockerfile"
-							);
+							const projectName = projectPath[projectPath.length - 2];
+							await cmdHelper.ipfsGet(dockerFileIdentifier, path.slice(0, -1) + "/" + transactionId + "/" + projectName + "/dockerfile");
 
-							let output = await cmdHelper.execShellCommand(
-								"docker build -t 'task:latest' ./" +
-									transactionId +
-									"/" +
-									projectName
-							);
+							let output = await cmdHelper.execShellCommand("docker build -t 'task:latest' ./" + transactionId + "/" + projectName);
 							console.log(output);
-							await axios
-								.post(vmIp + "/api/v1/task/status", {
+							await axios.post(vmIp + "/api/v1/task/status", {
 									transactionId: transactionId,
 									status: "running"
 								})
 								.then(async () => {
 									containerIntervalObj = setInterval(() => {
-										axios
-											.post(vmIp + "/api/v1/polling", {
+										axios.post(vmIp + "/api/v1/polling", {
 												type: "containerRunning",
 												transactionId: transactionId,
 												status: "running"
 											})
 											.then(response => {
-												console.log(
-													"container polling data ",
-													response.data
-												);
+												console.log("container polling data ", response.data);
 											});
 									}, 1000);
 								});
-							output = await cmdHelper.execShellCommand(
-								"docker run task:latest"
-							);
+							output = await cmdHelper.execShellCommand("docker run task:latest");
 							console.log(output);
 							try {
-								await cmdHelper.execShellCommand(
-									"docker create -ti --name temp task:latest bash"
-								);
-								await cmdHelper.execShellCommand(
-									"docker cp temp:/task/results ./dockerResults"
-								);
-								await cmdHelper.execShellCommand(
-									"docker rm -f temp"
-								);
-								await compressing.tar.compressDir(
-									"./dockerResults",
-									"./results.zip"
-								);
+								await cmdHelper.execShellCommand("docker create -ti --name temp task:latest bash");
+								await cmdHelper.execShellCommand("docker cp temp:/task/results ./dockerResults");
+								await cmdHelper.execShellCommand("docker rm -f temp");
+								await compressing.tar.compressDir("./dockerResults", "./results.zip");
 
-								const resultFileIdentifier = await cmdHelper.ipfsAdd(
-									"./results.zip"
-								);
+								const resultFileIdentifier = await cmdHelper.ipfsAdd("./results.zip");
 								const postBody = {
 									transactionId: transactionId,
 									type: "provider",
@@ -205,22 +144,16 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 									}
 								};
 								axios
-									.post(
-										vmIp + "/api/v1/task/fileIdentifier",
-										postBody
-									)
+									.post(vmIp + "/api/v1/task/fileIdentifier", postBody)
 									.then(response => {
 										console.log(response.data);
 									})
 									.catch(async err => {
 										console.log(err);
-										await axios.post(
-											vmIp + "/api/v1/task/status",
-											{
+										await axios.post(vmIp + "/api/v1/task/status", {
 												transactionId: transactionId,
 												status: "failed"
-											}
-										);
+											});
 									});
 							} catch (e) {
 								await axios.post(vmIp + "/api/v1/task/status", {
@@ -237,47 +170,21 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 									status: "stopped"
 								})
 								.then(response => {
-									console.log(
-										"container polling stopped ",
-										response.data
-									);
+									console.log("container polling stopped ", response.data);
 								});
 
 							clearInterval(containerIntervalObj);
 							axios
-								.get(
-									vmIp +
-										"/api/v1/providers/setIsAssigned/" +
-										userId +
-										"/false"
-								)
-								.then(response =>
-									console.log(
-										"provider " +
-											userId +
-											" is free " +
-											response.data
-									)
+								.get(vmIp + "/api/v1/providers/setIsAssigned/" + userId + "/false").then(response =>
+									console.log("provider " + userId + " is free " + response.data)
 								);
-							axios.get(
-								"http://127.0.0.1:" +
-									port +
-									"/api/v1/local/polling/provider/" +
-									userId +
-									"/start"
-							);
+							axios.get("http://127.0.0.1:" + port + "/api/v1/local/polling/provider/" + userId + "/start");
 						});
 				} else {
 					console.log("calling");
 					timeoutObj = setTimeout(function() {
 						axios
-							.get(
-								"http://127.0.0.1:" +
-									port +
-									"/api/v1/local/polling/provider/" +
-									userId +
-									"/start"
-							)
+							.get("http://127.0.0.1:" + port + "/api/v1/local/polling/provider/" + userId + "/start")
 							.then()
 							.catch();
 					}, 5000);
