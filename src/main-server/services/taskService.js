@@ -169,31 +169,6 @@ async function updateTaskStatus({ transactionId, status }) {
 					}
 					return response;
 				})
-				.then(response => {
-					getTaskTime(response.transactionId).then(async time => {
-						if (time.providerId) {
-							const providerInfo = await Provider.findOne({
-								providerId: time.providerId
-							});
-							const cost =
-								((time.endTime -
-									time.startTime)*providerInfo.providerCharge )/
-								(1000);
-							console.log("end time ",time.endTime);
-							console.log("start time ",time.startTime);
-							console.log("diff ",(time.endTime - time.startTime));
-							console.log("prod ",(time.endTime - time.startTime)*providerInfo.providerCharge);
-							console.log("provider charge ",providerInfo.providerCharge)
-							console.log("cost ",cost);
-
-							const res = await setTaskCost({
-								transactionId: response.transactionId,
-								cost: cost
-							});
-							console.log("set task cost ", res);
-						}
-					});
-				});
 		})
 		.catch(err => err);
 	return { message: "updated Successfully" };
@@ -300,6 +275,31 @@ async function setFileIdentifier({
 			.execShellCommand(
 				"ipfs get " + fileIdentifiers.resultFileIdentifier
 			)
+			.then(response => {
+				getTaskTime(response.transactionId).then(async time => {
+					if (time.providerId) {
+						const providerInfo = await Provider.findOne({
+							providerId: time.providerId
+						});
+						const cost =
+							((time.endTime -
+								time.startTime)*providerInfo.providerCharge )/
+							(1000);
+						console.log("end time ",time.endTime);
+						console.log("start time ",time.startTime);
+						console.log("diff ",(time.endTime - time.startTime));
+						console.log("prod ",(time.endTime - time.startTime)*providerInfo.providerCharge);
+						console.log("provider charge ",providerInfo.providerCharge)
+						console.log("cost ",cost);
+
+						const res = await setTaskCost({
+							transactionId: response.transactionId,
+							cost: cost
+						});
+						console.log("set task cost ", res);
+					}
+				});
+			})
 			.then(output => {
 				console.log(output);
 				emailService.sendMail(transactionId, 1);
