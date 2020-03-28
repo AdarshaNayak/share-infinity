@@ -60,7 +60,7 @@ async function getProviders(minCpu, minRam, minStorage) {
 					["ram"]: system.ram,
 					["cpu"]: system.cpuCores,
 					["storage"]: system.storage,
-					["rating"]: providerRating,
+					["rating"]: Math.round((providerRating + Number.EPSILON) * 100) / 100,
 					["charge"]: providerIds[system.userId]["charge"]
 				});
 			}
