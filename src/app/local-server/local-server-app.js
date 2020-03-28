@@ -339,7 +339,7 @@ app.post("/api/v1/local/sysinfo", (req, res) => {
 	});
 });
 
-app.get("/api/v1//local/results/:userId/:transactionId", (req, res) => {
+app.get("/api/v1/local/results/:userId/:transactionId", (req, res) => {
 	const transactionId = req.params.transactionId;
 	axios
 		.get(vmIp + "/api/v1/task/fileIdentifier/consumer/" + transactionId)
