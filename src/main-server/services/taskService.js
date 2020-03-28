@@ -339,7 +339,13 @@ async function getTaskAllocatedStatus(userId) {
 		return {
 			transactionId: null
 		};
-	} else {
+	}
+	else if(status.filesSet === false){
+		return {
+			transactionId: null
+		};
+	}
+	else {
 		const result = {
 			transactionId: status.transactionId
 		};
