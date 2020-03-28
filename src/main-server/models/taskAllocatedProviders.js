@@ -10,6 +10,10 @@ const taskAllocatedProvidersSchema =  new Schema({
     providerId:{
         type: String,
         ref:'User'
+    },
+    filesSet:{
+        type:Boolean,
+        default:false
     }
 });
 
