@@ -178,7 +178,14 @@ async function updateTaskStatus({ transactionId, status }) {
 							const cost =
 								((time.endTime -
 									time.startTime)*providerInfo.providerCharge )/
-								(1000 * 60);
+								(1000);
+							console.log("end time ",time.endTime);
+							console.log("start time ",time.startTime);
+							console.log("diff ",(time.endTime - time.startTime));
+							console.log("prod ",(time.endTime - time.startTime)*providerInfo.providerCharge);
+							console.log("provider charge ",providerInfo.providerCharge)
+							console.log("cost ",cost);
+
 							const res = await setTaskCost({
 								transactionId: response.transactionId,
 								cost: cost
