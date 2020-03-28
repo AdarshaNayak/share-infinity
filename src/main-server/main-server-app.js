@@ -19,6 +19,7 @@ const userService = require("./services/user.service");
 const taskService = require("./services/taskService");
 const Provider = require("./models/provider");
 const walletService = require("./services/wallet.service");
+const chargeService = require("./services/charge.service");
 
 //helpers
 //const loadDatabase =  require('./_helpers/loadDatabase');
@@ -276,7 +277,21 @@ app.post("/api/v1/pay",(req,res,next) => {
 			else
 				res.send(response);
 		}).catch(err => next(err));
-})
+});
+
+app.get("/api/v1/charge/:userId",(req,res,next) => {
+	chargeService.getProviderCharge(req.params.userId).then((response) => {
+		res.send(response);
+	}).catch(err => next(err));
+});
+
+app.put("/api/v1/charge",(req,res,next) => {
+	chargeService.updateProviderCharge(req.body).then((response) => {
+		res.send(response);
+	})
+		.catch(err => next(err));
+});
+
 // NOTE: the below middleware has to be applied after calling the api so do not move it
 // global error handler
 app.use(errorHandler);
