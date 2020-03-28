@@ -335,6 +335,7 @@ async function getFileIdentifier(transactionId, type) {
 
 async function getTaskAllocatedStatus(userId) {
 	const status = await TaskAllocatedProviders.findOne({ providerId: userId });
+	console.log("task for provider "+userId+"  ",status);
 	if (status === null) {
 		return {
 			transactionId: null
