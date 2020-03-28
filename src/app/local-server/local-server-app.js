@@ -96,6 +96,7 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 				console.log(transactionId);
 				if (transactionId !== null) {
 					axios.get(vmIp + "/api/v1/task/fileIdentifier/provider/" + transactionId).then(async response => {
+						try{
 							await cmdHelper.execShellCommand("mkdir " + transactionId);
 							const path = await cmdHelper.execShellCommand("pwd");
 							await cmdHelper.ipfsGet(response.data["dataFileIdentifier"], path.slice(0, -1) + "/" + transactionId + "/data.zip");
@@ -126,7 +127,6 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 								});
 							output = await cmdHelper.execShellCommand("docker run task:latest");
 							console.log(output);
-							try {
 								await cmdHelper.execShellCommand("docker create -ti --name temp task:latest bash");
 								await cmdHelper.execShellCommand("docker cp temp:/task/results ./dockerResults");
 								await cmdHelper.execShellCommand("docker rm -f temp");
