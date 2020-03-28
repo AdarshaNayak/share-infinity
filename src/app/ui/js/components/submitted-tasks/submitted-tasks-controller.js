@@ -84,6 +84,7 @@ export default class submittedTasksController {
 		this.taskService.submitRating(transactionId, this.rating[index]).then(
 			function(response) {
 				ctrl.showAlert("Ratings submitted successfully", "");
+				ctrl.getTasks();
 			},
 			function(err) {
 				console.log(err);
