@@ -281,10 +281,7 @@ async function setFileIdentifier({
 						const providerInfo = await Provider.findOne({
 							providerId: time.providerId
 						});
-						const cost =
-							((time.endTime -
-								time.startTime)*providerInfo.providerCharge )/
-							(1000);
+						const cost = Math.floor((time.endTime - time.startTime)/1000)*providerInfo.providerCharge;
 						console.log("end time ",time.endTime);
 						console.log("start time ",time.startTime);
 						console.log("diff ",(time.endTime - time.startTime));
