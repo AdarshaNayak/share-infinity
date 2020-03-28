@@ -90,4 +90,15 @@ export default class taskService {
 			amount: amount
 		});
 	}
+
+	getCharge(userId) {
+		return this.$http.get(this.ip + "/api/v1/charge/" + userId);
+	}
+
+	updateCharge(userId, amount) {
+		return this.$http.put(this.ip + "/api/v1/charge", {
+			userId: userId,
+			amount: amount
+		});
+	}
 }

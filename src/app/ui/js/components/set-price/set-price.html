@@ -1,0 +1,33 @@
+<div class="card card-outline-dark">
+	<div class="card-header bg-dark text-white">
+		<h3 class="mb-0">Set usage price</h3>
+	</div>
+
+	<div class="card-body" style="text-align: center;">
+		<h5 class="card-title">
+			User ID : {{ $ctrl.userId}}
+		</h5>
+		<h5 class="card-title">
+			Current Rate : <strong>{{ $ctrl.charge}} credits / sec</strong>
+		</h5>
+		<hr />
+		<form ng-submit="$ctrl.updateBalance($ctrl.amount)">
+			<div class="form-group col-auto">
+				<label for="amount">Update charges </label>
+				<input
+					type="number"
+					class="form-control mb-2"
+					id="amount"
+					placeholder="Enter new rate"
+					style="text-align: center;"
+					required
+					min="1"
+					ng-model="$ctrl.amount"
+				/>
+			</div>
+			<br />
+			<input type="submit" class="btn btn-primary" value="Update" />
+		</form>
+	</div>
+</div>
+s

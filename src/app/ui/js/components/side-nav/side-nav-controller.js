@@ -43,6 +43,11 @@ export default class sideNavController {
 		this.toggleLeft();
 	}
 
+	goToSetPrice() {
+		this.$location.path("/set-price");
+		this.toggleLeft();
+	}
+
 	poll(mode) {
 		console.log(mode);
 		var userId = JSON.parse(sessionStorage.getItem("currentUser")).userId;
