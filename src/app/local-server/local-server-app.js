@@ -84,7 +84,7 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 		axios
 			.get(vmIp + "/api/v1/providers/" + userId + "/online")
 			.then(res => console.log(res.data))
-			.catch(err => console.log("hey"));
+			.catch(err => console.log("error while setting provider as online"));
 		// console.log("polling started");
 		axios
 			.post(vmIp + "/api/v1/polling", {
