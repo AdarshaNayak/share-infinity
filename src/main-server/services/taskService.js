@@ -242,7 +242,7 @@ async function setTaskCost({ transactionId, cost }) {
 		return { message: "task not found" };
 	}
 	completedTask.cost = cost;
-	console.log(completedTask);
+	console.log("task cost set completed ",completedTask);
 	return completedTask
 		.save()
 		.then(response => {
@@ -260,9 +260,9 @@ async function setFileIdentifier({
 	let task = await TaskFiles.findOne({ transactionId: transactionId });
 	if (task === null) {
 		//not necessary but added for smooth operation
-		task = await TaskFiles.create({
-			transactionId: transactionId
-		});
+		// task = await TaskFiles.create({
+		// 	transactionId: transactionId
+		// });
 	}
 	if (type === "consumer") {
 		task.dataFileIdentifier = fileIdentifiers.dataFileIdentifier;
@@ -279,7 +279,13 @@ async function setFileIdentifier({
 					.then(output => {
 						console.log(output);
 					});
-			});
+			}).then(async () => {
+				const taskAllocatedProvider =  await TaskAllocatedProviders.findOne({transactionId:transactionId});
+				taskAllocatedProvider.filesSet = true;
+				await taskAllocatedProvider.save();
+				console.log("task allocated provider's files are set ",taskAllocatedProvider);
+		})
+
 	} else {
 		task.resultFileIdentifier = fileIdentifiers.resultFileIdentifier;
 		task.resultFileKey = fileKey.resultFileKey;
