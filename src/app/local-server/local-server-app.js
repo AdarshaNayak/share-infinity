@@ -6,7 +6,7 @@ const axios = require("axios");
 const compressing = require("compressing");
 const app = express();
 const port = 3000;
-const vmIp = "http://54.210.130.81:8000";
+const vmIp = "http://localhost:8000";
 let timeoutObj = null;
 let containerIntervalObj = null;
 const { exec } = require("child_process");
@@ -143,6 +143,8 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 										resultFileKey: resultFileIdentifier
 									}
 								};
+								await cmdHelper.execShellCommand("rm -rf dockerResults");
+								await cmdHelper.execShellCommand("rm results.zip");
 								axios
 									.post(vmIp + "/api/v1/task/fileIdentifier", postBody)
 									.then(response => {
