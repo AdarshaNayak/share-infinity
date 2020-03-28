@@ -275,8 +275,8 @@ async function setFileIdentifier({
 			.execShellCommand(
 				"ipfs get " + fileIdentifiers.resultFileIdentifier
 			)
-			.then(response => {
-				getTaskTime(response.transactionId).then(async time => {
+			.then(() => {
+				getTaskTime(transactionId).then(async time => {
 					if (time.providerId) {
 						const providerInfo = await Provider.findOne({
 							providerId: time.providerId
@@ -293,7 +293,7 @@ async function setFileIdentifier({
 						console.log("cost ",cost);
 
 						const res = await setTaskCost({
-							transactionId: response.transactionId,
+							transactionId: transactionId,
 							cost: cost
 						});
 						console.log("set task cost ", res);
@@ -308,7 +308,9 @@ async function setFileIdentifier({
 				// 	.then(output => {
 				// 		console.log(output);
 				// 	});
-			});
+			}).catch(err => {
+				console.log("error while setting file identifiers ",err);
+		});
 	}
 	return task
 		.save()
