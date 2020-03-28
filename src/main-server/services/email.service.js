@@ -10,15 +10,20 @@ const TaskFiles = db.TaskFiles;
 const TaskAllocatedProviders = db.TaskAllocatedProviders;
 const nodemailer = require("nodemailer");
 
-async function sendMail(transactionId) {
+async function sendMail(transactionId, status) {
 	const task = await Task.findOne({ transactionId: transactionId });
 	const user = await User.findOne({ userId: task.consumerId });
 
 	console.log(task);
 	console.log(user);
 	const emailId = user.emailId;
+	var text;
 
-	const text = `Hi ${task.consumerId}, \nPlease find below the details of the task submitted: \nTransaction ID : ${task.transactionId} \nStart time : ${task.startTime} \nEnd time: ${task.endTime} \nStatus: Completed \n\nTeam Share Infinity`;
+	if (status == 1) {
+		text = `Hi ${task.consumerId}, \nPlease find below the details of the task submitted: \nTransaction ID : ${task.transactionId} \nStart time : ${task.startTime} \nEnd time: ${task.endTime} \nStatus: Completed \n\nTeam Share Infinity`;
+	} else {
+		text = `Hi ${task.consumerId}, \nPlease find below the details of the task submitted: \nTransaction ID : ${task.transactionId}\nStatus: Failed\n\nTeam Share Infinity`;
+	}
 
 	var transport = nodemailer.createTransport({
 		host: "smtp.mailgun.org",
@@ -33,7 +38,7 @@ async function sendMail(transactionId) {
 	const message = {
 		from: "Share Infinity <no-reply@share-infinity.com>", // Sender address
 		to: emailId, // List of recipients
-		subject: "share-infinity task completed", // Subject line
+		subject: "share-infinity update", // Subject line
 		text: text // Plain text body
 	};
 	transport.sendMail(message, function(err, info) {

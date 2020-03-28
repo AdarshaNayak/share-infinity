@@ -164,7 +164,9 @@ async function updateTaskStatus({ transactionId, status }) {
 				providerId: task.providerId
 			})
 				.then(response => {
-					emailService.sendMail(response.transactionId);
+					if (status == "failed") {
+						emailService.sendMail(response.transactionId, 0);
+					}
 					return response;
 				})
 				.then(response => {
@@ -287,11 +289,12 @@ async function setFileIdentifier({
 			)
 			.then(output => {
 				console.log(output);
-				cmdHelper
-					.execShellCommand("ipfs get " + fileKey.resultFileKey)
-					.then(output => {
-						console.log(output);
-					});
+				emailService.sendMail(transactionId, 1);
+				// cmdHelper
+				// 	.execShellCommand("ipfs get " + fileKey.resultFileKey)
+				// 	.then(output => {
+				// 		console.log(output);
+				// 	});
 			});
 	}
 	return task
