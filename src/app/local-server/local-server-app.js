@@ -125,11 +125,11 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 											});
 									}, 1000);
 								});
-							output = await cmdHelper.execShellCommand("docker run task:latest");
+							output = await cmdHelper.execShellCommand("docker run -v "+path.slice(0,-1).replace(/\s/g,"\\ ")+"/dockerResults/:/task/results task:latest");
 							console.log(output);
-								await cmdHelper.execShellCommand("docker create -ti --name temp task:latest bash");
-								await cmdHelper.execShellCommand("docker cp temp:/task/results ./dockerResults");
-								await cmdHelper.execShellCommand("docker rm -f temp");
+								// await cmdHelper.execShellCommand("docker create -ti --name temp task:latest bash");
+								// await cmdHelper.execShellCommand("docker cp temp:/task/results ./dockerResults");
+								// await cmdHelper.execShellCommand("docker rm -f temp");
 								await compressing.tar.compressDir("./dockerResults", "./results.zip");
 
 								const resultFileIdentifier = await cmdHelper.ipfsAdd("./results.zip");
