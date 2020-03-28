@@ -15,6 +15,8 @@ export default class sideNavController {
 				sessionStorage.getItem("currentUser")
 			).userId;
 		} else this.userId = "";
+
+		this.providerMode = false;
 	}
 
 	buildToggler(componentId) {
@@ -51,7 +53,7 @@ export default class sideNavController {
 	poll(mode) {
 		console.log(mode);
 		var userId = JSON.parse(sessionStorage.getItem("currentUser")).userId;
-		if (mode === undefined || mode === false) {
+		if (mode === true) {
 			this.$http.get(
 				this.localIp +
 					"/api/v1/local/polling/provider/" +
