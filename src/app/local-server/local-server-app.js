@@ -125,7 +125,7 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 											});
 									}, 1000);
 								});
-							output = await cmdHelper.execShellCommand(`docker run -v --name ${transactionId} `+path.slice(0,-1).replace(/\s/g,"\\ ")+`/dockerResults${transactionId}/:/task/results task:latest`);
+							output = await cmdHelper.execShellCommand(`docker run --name ${transactionId} -v  `+path.slice(0,-1).replace(/\s/g,"\\ ")+`/dockerResults${transactionId}/:/task/results task:latest`);
 							console.log(output);
 								// await cmdHelper.execShellCommand("docker create -ti --name temp task:latest bash");
 								// await cmdHelper.execShellCommand("docker cp temp:/task/results ./dockerResults");
