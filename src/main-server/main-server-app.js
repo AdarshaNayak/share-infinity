@@ -251,7 +251,7 @@ app.post("/api/v1/sysinfo", (req, res, next) => {
 
 app.post("/api/v1/rating", (req, res, next) => {
 	taskService
-		.updateRating(req.body)
+		.updateRatings(req.body)
 		.then(() => res.json({ message: "rating updated successfully" }))
 		.catch(err => next(err));
 });
