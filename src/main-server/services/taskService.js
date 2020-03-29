@@ -159,7 +159,7 @@ async function updateTaskStatus({ transactionId, status }) {
 	task.status = status;
 	task.save()
 		.then(task => {
-			CompletedTasks.update({
+			CompletedTasks.findOneAndUpdate({transactionId: task.transactionId},{
 				transactionId: task.transactionId,
 				consumerId: task.consumerId,
 				providerId: task.providerId
