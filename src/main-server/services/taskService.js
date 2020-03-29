@@ -13,7 +13,7 @@ const TaskAllocatedProviders = db.TaskAllocatedProviders;
 async function getProviderRating(providerId) {
 	 return CompletedTasks.find({ providerId: providerId })
 		.then(tasks => {
-			console.log("tasks ",tasks);
+			// console.log("tasks ",tasks);
 			if (tasks.length!=0) {
 				const count = tasks.length;
 				let totalRating = 0;
@@ -54,7 +54,7 @@ async function getProviders(minCpu, minRam, minStorage) {
 			});
 			for (const system of matchedSystems) {
 				const providerRating = await getProviderRating(system.userId);
-				console.log("rating ",providerRating);
+				// console.log("rating ",providerRating);
 				result["providers"].push({
 					["providerId"]: system.userId,
 					["ram"]: system.ram,
@@ -131,7 +131,7 @@ async function getTasks(userId, type) {
 						transactionId: task.transactionId
 					})
 						.then(completedTask => {
-							console.log("completed task ",completedTask);
+							// console.log("completed task ",completedTask);
 							if (!completedTask)
 								throw new Error("task not found");
 							taskItem["rating"] = completedTask.rating;
@@ -150,7 +150,7 @@ async function getTasks(userId, type) {
 
 async function updateTaskStatus({ transactionId, status }) {
 	const task = await Task.findOne({ transactionId: transactionId });
-	console.log(task);
+	// console.log(task);
 	if (task === null) {
 		return { message: "task not found" };
 	}
@@ -185,7 +185,7 @@ async function getTaskStatus(transactionId) {
 }
 
 async function setTaskTime({ transactionId, type }) {
-	console.log(transactionId, type);
+	// console.log(transactionId, type);
 	const task = await Task.findOne({ transactionId: transactionId });
 	if (task === null) {
 		return { message: "task not found" };
@@ -224,7 +224,7 @@ async function setTaskCost({ transactionId, cost }) {
 		return { message: "task not found" };
 	}
 	completedTask.cost = cost;
-	console.log("task cost set completed ",completedTask);
+	// console.log("task cost set completed ",completedTask);
 	return completedTask
 		.save()
 		.then(response => {
@@ -253,19 +253,19 @@ async function setFileIdentifier({
 		cmdHelper
 			.execShellCommand("ipfs get " + fileIdentifiers.dataFileIdentifier)
 			.then(output => {
-				console.log(output);
+				// console.log(output);
 				cmdHelper
 					.execShellCommand(
 						"ipfs get " + fileIdentifiers.dockerFileIdentifier
 					)
 					.then(output => {
-						console.log(output);
+						// console.log(output);
 					});
 			}).then(async () => {
 				const taskAllocatedProvider =  await TaskAllocatedProviders.findOne({transactionId:transactionId});
 				taskAllocatedProvider.filesSet = true;
 				await taskAllocatedProvider.save();
-				console.log("task allocated provider's files are set ",taskAllocatedProvider);
+				// console.log("task allocated provider's files are set ",taskAllocatedProvider);
 		})
 
 	} else {
@@ -282,23 +282,23 @@ async function setFileIdentifier({
 							providerId: time.providerId
 						});
 						const cost = Math.floor((time.endTime - time.startTime)/1000)*providerInfo.providerCharge;
-						console.log("end time ",time.endTime);
-						console.log("start time ",time.startTime);
-						console.log("diff ",(time.endTime - time.startTime));
-						console.log("prod ",(time.endTime - time.startTime)*providerInfo.providerCharge);
-						console.log("provider charge ",providerInfo.providerCharge)
-						console.log("cost ",cost);
+						// console.log("end time ",time.endTime);
+						// console.log("start time ",time.startTime);
+						// console.log("diff ",(time.endTime - time.startTime));
+						// console.log("prod ",(time.endTime - time.startTime)*providerInfo.providerCharge);
+						// console.log("provider charge ",providerInfo.providerCharge)
+						// console.log("cost ",cost);
 
 						const res = await setTaskCost({
 							transactionId: transactionId,
 							cost: cost
 						});
-						console.log("set task cost ", res);
+						// console.log("set task cost ", res);
 					}
 				});
 			})
 			.then(output => {
-				console.log(output);
+				// console.log(output);
 				emailService.sendMail(transactionId, 1);
 				// cmdHelper
 				// 	.execShellCommand("ipfs get " + fileKey.resultFileKey)
@@ -341,7 +341,7 @@ async function getFileIdentifier(transactionId, type) {
 
 async function getTaskAllocatedStatus(userId) {
 	const status = await TaskAllocatedProviders.findOne({ providerId: userId });
-	console.log("task for provider "+userId+"  ",status);
+	// console.log("task for provider "+userId+"  ",status);
 	if (status === null) {
 		return {
 			transactionId: null
@@ -374,7 +374,7 @@ async function updateRatings(ratingsParam) {
 	completedTask.rating = ratingsParam.rating;
 	await completedTask
 		.save()
-		.then(res => console.log("rating set successfully"))
+		// .then(res => console.log("rating set successfully"))
 		.catch(err => console.log(err));
 
 	const task = await Task.findOne({
@@ -384,7 +384,7 @@ async function updateRatings(ratingsParam) {
 
 	await task
 		.save()
-		.then(res => console.log("isRated set successfully"))
+		// .then(res => console.log("isRated set successfully"))
 		.catch(err => console.log(err));
 }
 

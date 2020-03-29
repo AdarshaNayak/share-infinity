@@ -70,7 +70,7 @@ app.get("/api/v1/users/:id", (req, res, next) => {
 });
 
 app.get("/api/v1/providers/:cpu/:ram/:storage", (req, res, next) => {
-	console.log("get providers");
+	// console.log("get providers");
 	taskService
 		.getProviders(
 			parseInt(req.params.cpu),
@@ -86,10 +86,10 @@ app.get("/api/v1/providers/:cpu/:ram/:storage", (req, res, next) => {
 app.get("/api/v1/providers/:providerId/:state", (req, res, next) => {
 	const providerId = req.params.providerId;
 	const state = req.params.state;
-	console.log(providerId, state);
+	// console.log(providerId, state);
 	Provider.findOne({ providerId: providerId })
 		.then(provider => {
-			console.log(provider);
+			// console.log(provider);
 			if (state == "online") {
 				provider.isOnline = true;
 				provider.providerInUse = false;
@@ -110,10 +110,10 @@ app.get("/api/v1/providers/:providerId/:state", (req, res, next) => {
 app.get("/api/v1/providers/setIsAssigned/:providerId/:isAssigned", (req, res, next) => {
 	const providerId = req.params.providerId;
 	const isAssigned = req.params.isAssigned;
-	console.log(providerId, isAssigned);
+	// console.log(providerId, isAssigned);
 	Provider.findOne({ providerId: providerId })
 		.then(provider => {
-			console.log(provider);
+			// console.log(provider);
 			if(provider){
 				if (isAssigned == "true") {
 					provider.isAssigned = true;
@@ -133,7 +133,7 @@ app.post("/api/v1/tasks", (req, res, next) => {
 	taskService
 		.createTask(req.body)
 		.then(response => {
-			console.log(response);
+			// console.log(response);
 			res.send(response);
 		})
 		.catch(err => {
@@ -217,15 +217,15 @@ app.get(
 );
 
 app.post("/api/v1/polling", (req, res, next) => {
-	console.log("in polling")
-	console.log(req.body);
+	// console.log("in polling")
+	// console.log(req.body);
 	const type = req.body.type;
 	if(type === "taskRequired"){
 		const userId = req.body.userId;
 		taskService
 			.getTaskAllocatedStatus(userId)
 			.then(response => {
-				console.log(response);
+				// console.log(response);
 				res.send(response);
 			})
 			.catch(error => next(error));
