@@ -83,6 +83,7 @@ async function createTask({ userId, providerId }) {
 		cost: null
 	})
 		.then(async response => {
+			console.log("Created task \n\n",response);
 			await TaskAllocatedProviders.create({
 				transactionId: response.transactionId,
 				providerId: providerId
@@ -191,6 +192,13 @@ async function setTaskTime({ transactionId, type }) {
 		return { message: "task not found" };
 	}
 	task[type] = new Date();
+
+	if(type === "startTime"){
+		const tasks = await Task.find({});
+		const completedTasks = await CompletedTasks.find({});
+		console.log("Number of tasks running",tasks.length - completedTasks.length);
+	}
+
 	return task
 		.save()
 		.then(res => {
