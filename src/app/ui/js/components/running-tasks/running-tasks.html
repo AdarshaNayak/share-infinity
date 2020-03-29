@@ -1,42 +1,41 @@
 <div ng-show="$ctrl.error" class="alert alert-danger">
-    {{ $ctrl.message }}
+	{{ $ctrl.message }}
 </div>
 <div ng-show="$ctrl.success" class="alert alert-success">
-    {{ $ctrl.message }}
+	{{ $ctrl.message }}
 </div>
 <div class="card card-outline-dark">
-    <div class="card-header bg-dark text-white">
-        <h3 class="mb-0">Running tasks</h3>
-    </div>
-    <div ng-show="$ctrl.tasks.length == 0">
-        <br />
-        <h3 style="text-align: center;">Nothing to see here !</h3>
-        <br />
-    </div>
-    <div class="card-body" ng-hide="$ctrl.tasks.length == 0">
-        <div ng-repeat="item in $ctrl.tasks">
-            <div
-                    class="card"
-                    ng-attr-id="{{item.transactionId}}"
-                    ng-class="{'border-success': item.status == 'completed', 'border-primary': item.status == 'running','border-danger': item.status == 'failed'}"
-            >
-                <div flex-gt-sm="50"></div>
-                <h5
-                        class="card-header text-white"
-                        ng-class="{'bg-success': item.status == 'completed', 'bg-primary': item.status == 'running','bg-danger': item.status == 'failed'}"
-                >
-                    Transaction ID : {{ item.transactionId }}
-                </h5>
+	<div class="card-header bg-dark text-white">
+		<h3 class="mb-0">Running tasks</h3>
+	</div>
+	<div ng-show="$ctrl.tasks.length == 0">
+		<br />
+		<h3 style="text-align: center;">Nothing to see here !</h3>
+		<br />
+	</div>
+	<div class="card-body" ng-hide="$ctrl.tasks.length == 0">
+		<div ng-repeat="item in $ctrl.tasks">
+			<div
+				class="card"
+				ng-attr-id="{{item.transactionId}}"
+				ng-class="{'border-success': item.status == 'completed', 'border-primary': item.status == 'running','border-danger': item.status == 'failed','border-secondary':item.status == 'submitted'}"
+			>
+				<div flex-gt-sm="50"></div>
+				<h5
+					class="card-header text-white"
+					ng-class="{'bg-success': item.status == 'completed', 'bg-primary': item.status == 'running','bg-danger': item.status == 'failed','bg-secondary':item.status == 'submitted'}"
+				>
+					Transaction ID : {{ item.transactionId }}
+				</h5>
 
-                <div class="card-body">
-                    <h5 class="card-title">Consumer ID : {{item.userId}}</h5>
-                    <h5 class="card-title">Status : {{item.status}}</h5>
-                </div>
+				<div class="card-body">
+					<h5 class="card-title">Consumer ID : {{item.userId}}</h5>
+					<h5 class="card-title">Status : {{item.status}}</h5>
+				</div>
 
-
-                <br />
-            </div>
-            <br />
-        </div>
-    </div>
+				<br />
+			</div>
+			<br />
+		</div>
+	</div>
 </div>
