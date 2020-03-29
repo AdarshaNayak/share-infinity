@@ -159,11 +159,11 @@ async function updateTaskStatus({ transactionId, status }) {
 	task.status = status;
 	task.save()
 		.then(task => {
-			CompletedTasks.create({
+			CompletedTasks.findOneAndUpdate({transactionId: task.transactionId},{
 				transactionId: task.transactionId,
 				consumerId: task.consumerId,
 				providerId: task.providerId
-			})
+			},{upsert: true})
 				.then(response => {
 					if (status == "failed") {
 						emailService.sendMail(response.transactionId, 0);
