@@ -15,3 +15,11 @@
 ### cd src/main-server
 
 ### node main-server-app.js
+
+# Dependencies
+
+### Docker
+
+### IPFS
+
+
