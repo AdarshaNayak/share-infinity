@@ -137,6 +137,13 @@ async function getTasks(userId, type) {
 								throw new Error("task not found");
 							taskItem["rating"] = completedTask.rating;
 							taskItem["cost"] = completedTask.cost;
+							if(task.startTime && task.endTime){
+								const dateObj = new Date(task.endTime - task.startTime);
+								const hours = dateObj.getUTCHours();
+								const minutes = dateObj.getUTCMinutes();
+								const seconds = dateObj.getSeconds();
+								taskItem["duration"] = hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+							}
 						})
 						.catch(err => {
 							console.log("error ", err);
