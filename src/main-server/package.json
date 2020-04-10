@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "main-server-app.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node main-server-app.js"
 	},
 	"author": "Adarsh Nayak",
 	"license": "ISC",
