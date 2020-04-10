@@ -15,3 +15,13 @@
 ### cd src/main-server
 
 ### node main-server-app.js
+
+# Dependencies
+
+### Docker
+
+### IPFS
+
+### node v10.19.0
+
+
