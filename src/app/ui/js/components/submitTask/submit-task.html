@@ -1,67 +1,69 @@
 <div class="card card-outline-secondary">
-	<div class="card-header">
-		<h3 class="mb-0">Submit Task : Enter system configuration details</h3>
-	</div>
-	<div class="card-body">
-		<form
-			autocomplete="off"
-			class="form"
-			role="form"
-			ng-submit="$ctrl.getProviders()"
-		>
-			<div class="form-group">
-				<label for="inputName">Enter required RAM in GB</label>
-				<input
-					class="form-control"
-					id="RAM"
-					placeholder=""
-					type="number"
-					aria-required="true"
-					min="1"
-					required
-					ng-model="$ctrl.ram"
-				/>
-			</div>
+	<div class="card card-outline-dark">
+		<div class="card-header bg-dark text-white">
+			<h3 class="mb-0">Enter system configuration details:</h3>
+		</div>
+		<div class="card-body">
+			<form
+				autocomplete="off"
+				class="form"
+				role="form"
+				ng-submit="$ctrl.getProviders()"
+			>
+				<div class="form-group">
+					<label for="inputName">Enter required RAM in GB</label>
+					<input
+						class="form-control"
+						id="RAM"
+						placeholder=""
+						type="number"
+						aria-required="true"
+						min="1"
+						required
+						ng-model="$ctrl.ram"
+					/>
+				</div>
 
-			<div class="form-group">
-				<label for="inputName"
-					>CPU Cores : enter required no of CPU cores</label
-				>
-				<input
-					class="form-control"
-					id="cores"
-					placeholder=""
-					type="number"
-					min="1"
-					required
-					ng-model="$ctrl.cpuCores"
-				/>
-			</div>
+				<div class="form-group">
+					<label for="inputName"
+						>CPU Cores : enter required no of CPU cores</label
+					>
+					<input
+						class="form-control"
+						id="cores"
+						placeholder=""
+						type="number"
+						min="1"
+						required
+						ng-model="$ctrl.cpuCores"
+					/>
+				</div>
 
-			<div class="form-group">
-				<label for="inputName"
-					>Enter minimum required storage in GB</label
-				>
-				<input
-					class="form-control"
-					id="storage"
-					placeholder=""
-					type="number"
-					min="1"
-					required
-					ng-model="$ctrl.storage"
-				/>
-			</div>
+				<div class="form-group">
+					<label for="inputName"
+						>Enter minimum required storage in GB</label
+					>
+					<input
+						class="form-control"
+						id="storage"
+						placeholder=""
+						type="number"
+						min="1"
+						required
+						ng-model="$ctrl.storage"
+					/>
+				</div>
 
-			<br />
-			<div class="form-group">
-				<button
-					class="btn btn-success btn-lg float-right"
-					type="submit"
-				>
-					Submit
-				</button>
-			</div>
-		</form>
+				<br />
+				<div class="form-group">
+					<button
+						class="btn btn-success btn-lg float-right"
+						type="submit"
+					>
+						Submit
+					</button>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
