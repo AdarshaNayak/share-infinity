@@ -43,7 +43,7 @@
 				>
 					<div ng-show="$ctrl.downloading[$index] ">
 						<md-progress-linear
-							style="color: blue;background-color: blue;"
+							style="color: blue; background-color: blue;"
 							md-mode="indeterminate"
 						></md-progress-linear>
 						<br />
@@ -78,11 +78,14 @@
 						<hr />
 					</div>
 				</div>
-				<hr />
+
 				<div
 					ng-show="item.status == 'completed' && item.isPaymentDone == false"
 				>
 					<div class="card-body">
+						<h5 class="card-title">
+							Task duration (hh:mm:ss) : {{item.duration}}
+						</h5>
 						<h5 class="card-title">
 							Amount to be paid : {{item.cost}} credits
 						</h5>
