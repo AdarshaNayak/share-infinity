@@ -323,7 +323,7 @@ app.post("/api/v1/local/sysinfo", (req, res) => {
 				if (storage == "") {
 					storage = stdout
 						.split("\n")[1]
-						.split(" ")[9]
+						.split(" ")[8]
 						.split("Gi")[0];
 				}
 			} else {
