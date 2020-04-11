@@ -20,9 +20,82 @@ async function sendMail(transactionId, status) {
 	var text;
 
 	if (status == 1) {
-		text = `Hi ${task.consumerId}, \nPlease find below the details of the task submitted: \nTransaction ID : ${task.transactionId} \nStart time : ${task.startTime} \nEnd time: ${task.endTime} \nStatus: Completed \n\nTeam Share Infinity`;
+		text = `<style>
+		table, th, td {
+		 border: solid 1px #000;
+		 padding: 10px;
+	   }
+	   
+	   table {
+		   border-collapse:collapse;
+		   caption-side:bottom;
+	   }
+	   
+	   </style>
+	   
+	   <p> Hi ${task.consumerId}, please find below the details of your transaction: </p>
+	   <table>
+		 <tbody>
+			 <tr>
+			   <td>Transaction ID</td>
+			   <td>: ${task.transactionId}</td>
+			 </tr>
+			 <tr>
+			   <td>Provider ID</td>
+			   <td>: ${task.providerId}</td>
+	   
+			 </tr>
+			 <tr>
+			   <td>Start time</td>
+			   <td>: ${task.startTime}</td>
+	   
+			 </tr>
+			 <tr>
+			   <td>End time</td>
+			   <td>: ${task.endTime}</td>
+			 </tr>
+			 <tr>
+			   <td>Status</td>
+			   <td style="color:green"><strong>: COMPLETED SUCCESSFULLY</strong></td>
+			 </tr>
+		 </tbody>
+	   </table>
+	   <br>
+	   <p> Regards, </p>
+	   <p>Team Share Infinity</p>`;
 	} else {
-		text = `Hi ${task.consumerId}, \nPlease find below the details of the task submitted: \nTransaction ID : ${task.transactionId}\nStatus: Failed\n\nTeam Share Infinity`;
+		text = `<style>
+		table, th, td {
+		 border: solid 1px #000;
+		 padding: 10px;
+	   }
+	   
+	   table {
+		   border-collapse:collapse;
+		   caption-side:bottom;
+	   }
+	   
+	   </style>
+	   
+	   <p> Hi ${task.consumerId}, please find below the details of your transaction: </p>
+	   <table>
+		 <tbody>
+			 <tr>
+			   <td>Transaction ID</td>
+			   <td>: ${task.transactionId}</td>
+			 </tr>
+			 <tr>
+			   <td>Provider ID</td>
+			   <td>: ${task.providerId}</td>
+			 <tr>
+			   <td>Status</td>
+			   <td style="color:red"><strong>: FAILED</strong></td>
+			 </tr>
+		 </tbody>
+	   </table>
+	   <br>
+	   <p> Regards, </p>
+	   <p>Team Share Infinity</p>`;
 	}
 
 	var transport = nodemailer.createTransport({
@@ -31,17 +104,17 @@ async function sendMail(transactionId, status) {
 		auth: {
 			user:
 				"postmaster@sandbox7aa63df50e464f08a309423d01d449f4.mailgun.org",
-			pass: "500693c7c2fde23fab116c6f123b51c4-c322068c-833d46be"
-		}
+			pass: "500693c7c2fde23fab116c6f123b51c4-c322068c-833d46be",
+		},
 	});
 
 	const message = {
 		from: "Share Infinity <no-reply@share-infinity.com>", // Sender address
 		to: emailId, // List of recipients
 		subject: "share-infinity update", // Subject line
-		text: text // Plain text body
+		html: text, // Plain text body
 	};
-	transport.sendMail(message, function(err, info) {
+	transport.sendMail(message, function (err, info) {
 		if (err) {
 			console.log(err);
 		} else {
