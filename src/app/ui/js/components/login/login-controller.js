@@ -20,7 +20,7 @@ export default class loginController {
 		console.log("in login !!");
 		const ctrl = this;
 		this.authService.login(this.userId, this.password).then(
-			function(response) {
+			function (response) {
 				console.log(response.data);
 				if (response.data && response.data.token) {
 					sessionStorage.setItem(
@@ -29,12 +29,24 @@ export default class loginController {
 					);
 					ctrl.success = true;
 					ctrl.message = "Login Successful!";
-					ctrl.$timeout(function() {
+
+					ctrl.taskService.updateSystemInfo(ctrl.userId).then(
+						function (response) {
+							console.log("system info updated ... ", response);
+						},
+						function (error) {
+							console.log(
+								"system info failed to update .. " + error
+							);
+						}
+					);
+
+					ctrl.$timeout(function () {
 						ctrl.$location.path("/submit-task");
 					}, 500);
 				}
 			},
-			function(error) {
+			function (error) {
 				ctrl.error = true;
 				ctrl.message = error.data.message;
 				ctrl.userId = "";
