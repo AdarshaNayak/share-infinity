@@ -31,17 +31,6 @@ export default class loginController {
 					ctrl.success = true;
 					ctrl.message = "Login Successful!";
 
-					ctrl.taskService.updateSystemInfo(ctrl.userId).then(
-						function (response) {
-							console.log("system info updated ... ", response);
-						},
-						function (error) {
-							console.log(
-								"system info failed to update .. " + error
-							);
-						}
-					);
-
 					ctrl.$timeout(function () {
 						ctrl.$location.path("/submit-task");
 					}, 500);
