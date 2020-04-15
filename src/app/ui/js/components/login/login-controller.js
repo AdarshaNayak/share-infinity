@@ -1,12 +1,13 @@
 export default class loginController {
 	static get $inject() {
-		return ["authService", "$location", "$timeout"];
+		return ["authService", "$location", "$timeout", "taskService"];
 	}
 
-	constructor(authService, $location, $timeout) {
+	constructor(authService, $location, $timeout, taskService) {
 		this.authService = authService;
 		this.$location = $location;
 		this.$timeout = $timeout;
+		this.taskService = taskService;
 		this.error = false;
 		this.success = false;
 		this.userId = "";
