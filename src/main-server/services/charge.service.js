@@ -8,7 +8,7 @@ async function getProviderCharge(providerId) {
 }
 
 async function updateProviderCharge({userId,amount}) {
-    amount = parseInt(amount);
+    amount = parseFloat(amount);
     const provider = await Provider.findOne({providerId:userId});
     provider.providerCharge = amount;
     await provider.save();
