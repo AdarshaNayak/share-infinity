@@ -6,7 +6,7 @@ export default class taskService {
 	constructor($http, $timeout) {
 		this.$http = $http;
 		this.$timeout = $timeout;
-		this.ip = "http://54.210.130.81:8000";
+		this.ip = "http://3.86.177.245:8000";
 		this.localIp = "http://localhost:3000";
 	}
 

@@ -6,7 +6,7 @@ const axios = require("axios");
 const compressing = require("compressing");
 const app = express();
 const port = 3000;
-const vmIp = "http://54.210.130.81:8000";
+const vmIp = "http://3.86.177.245:8000";
 let timeoutObj = null;
 let containerIntervalObj = null;
 const { exec } = require("child_process");
@@ -95,7 +95,9 @@ app.get("/api/v1/local/polling/provider/:userId/:option", (req, res) => {
 			})
 			.then((response) => {
 				const transactionId = response.data.transactionId;
-				console.log(transactionId);
+				if(transactionId!=null)
+					console.log("\n\nTask received \n\n");
+				console.log("Task id",transactionId);
 				if (transactionId !== null) {
 					axios
 						.get(
