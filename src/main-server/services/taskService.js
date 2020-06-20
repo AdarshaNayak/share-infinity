@@ -158,7 +158,8 @@ async function getTasks(userId, type) {
 
 async function updateTaskStatus({ transactionId, status }) {
 	const task = await Task.findOne({ transactionId: transactionId });
-	// console.log(task);
+	console.log("status ",status);
+	console.log("task ",task);
 	if (task === null) {
 		return { message: "task not found" };
 	}

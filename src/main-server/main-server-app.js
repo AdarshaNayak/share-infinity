@@ -73,9 +73,9 @@ app.get("/api/v1/providers/:cpu/:ram/:storage", (req, res, next) => {
 	// console.log("get providers");
 	taskService
 		.getProviders(
-			parseInt(req.params.cpu),
-			parseInt(req.params.ram),
-			parseInt(req.params.storage)
+			parseFloat(req.params.cpu),
+			parseFloat(req.params.ram),
+			parseFloat(req.params.storage)
 		)
 		.then(response => {
 			response ? res.send(response) : res.sendStatus(400);

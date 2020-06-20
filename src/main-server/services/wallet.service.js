@@ -15,7 +15,7 @@ async function getBalance(userId) {
 async function addBalance({ userId, amount }) {
 	const wallet = await Wallet.findOne({ userId: userId });
 	console.log("fetched ", wallet);
-	wallet.balance = wallet.balance + parseInt(amount);
+	wallet.balance = wallet.balance + parseFloat(amount);
 	await wallet.save();
 	console.log("updated ", wallet);
 	return { balance: wallet.balance };
@@ -23,7 +23,7 @@ async function addBalance({ userId, amount }) {
 
 async function makePayment({ transactionId, amount }) {
 	console.log("am ", amount);
-	amount = parseInt(amount);
+	amount = parseFloat(amount);
 	const task = await Task.findOne({ transactionId: transactionId });
 	console.log(task);
 	const providerId = task.providerId;

@@ -1,9 +1,12 @@
 const config = require("../config/config.json");
 const mongoose = require("mongoose");
+mongoose.set('useFindAndModify', false);
+
 mongoose.connect(config.connectionString, {
 	useCreateIndex: true,
 	useNewUrlParser: true,
-	useUnifiedTopology: true
+	useUnifiedTopology: true,
+	useFindAndModify: false
 });
 mongoose.Promise = global.Promise;
 
