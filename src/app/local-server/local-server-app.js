@@ -337,6 +337,12 @@ app.post("/api/v1/local/sysinfo", (req, res) => {
 						.split(" ")[13]
 						.split("G")[0];
 				}
+				if (storage == "") {
+					storage = stdout
+						.split("\n")[1]
+						.split(" ")[14]
+						.split("G")[0];
+				}
 			}
 
 			console.log(storage);
