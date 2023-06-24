@@ -103,8 +103,8 @@ async function sendMail(transactionId, status) {
 		port: 587,
 		auth: {
 			user:
-				"postmaster@sandbox7aa63df50e464f08a309423d01d449f4.mailgun.org",
-			pass: "500693c7c2fde23fab116c6f123b51c4-c322068c-833d46be",
+				"xxx",
+			pass: "xxx",
 		},
 	});
 
